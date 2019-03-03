@@ -1,0 +1,88 @@
+:root {
+    --primary-color: #4522a8;
+    --primary-light: #7b4fdb;
+    --primary-dark: #000078;
+}
+
+body {}
+
+sidebar {
+    top: 0;
+    position: absolute;
+    width: 4rem;
+    background: var(--primary-light)
+}
+
+/* Sidebar */
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    margin-left: -15rem;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+}
+
+#sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+}
+
+#sidebar-wrapper .list-group {
+    width: 15rem;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -12rem;
+    }
+}
+
+/* Custom CSS */
+
+#sidebar-wrapper .list-group-item-action,
+#sidebar-wrapper .list-group-item-action {
+    padding: 2rem;
+}
+
+#sidebar-wrapper .list-group-item-action i {
+    float: right;
+}
+
+.stocks {}
+
+.main-container {
+    //background: red;
+    height: 100%;
+    min-height: 100%;
+    padding: 1rem;
+}
+
+.stocks-list {
+    margin-top: 1rem;
+}
+
+.stocks-list .list-group {
+    overflow-y: scroll;
+    height: 30rem;
+}
+
+.stocks-list .list-group-item-action {
+    padding: 1rem;
+}

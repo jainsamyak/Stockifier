@@ -1,0 +1,38 @@
+{
+  "name": "stockifier",
+  "version": "1.0.0",
+  "description": "A notification and insights app for stock markets",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jainsamyak/Stockifier.git"
+  },
+  "keywords": [
+    "stock",
+    "notifier",
+    "market",
+    "alert",
+    "insights",
+    "prediction",
+    "equity",
+    "analysis"
+  ],
+  "author": "Samyak Jain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jainsamyak/Stockifier/issues"
+  },
+  "homepage": "https://github.com/jainsamyak/Stockifier#readme",
+  "devDependencies": {
+    "electron": "^4.0.6",
+    "electron-reload": "^1.4.0"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.3.1"
+  }
+}

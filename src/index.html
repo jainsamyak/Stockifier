@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Stockifier</title>
+    <!-- CSS Imports -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+    <div class="d-flex" id="wrapper">
+
+        <!-- Sidebar -->
+        <div class="bg-light border-right" id="sidebar-wrapper">
+            <button class="btn btn-primary float-right" id="menu-toggle"><i class="material-icons">
+                    menu
+                </i></button>
+            <div class="list-group list-group-flush">
+                <a href="#" class="list-group-item list-group-item-action bg-light">Notify
+                    <i class="material-icons">
+                        notifications_active
+                    </i>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-light">Analyse
+                    <i class="material-icons">
+                        show_chart
+                    </i>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action bg-light">Predict
+                    <i class="material-icons">
+                        insert_chart
+                    </i>
+                </a>
+
+            </div>
+        </div>
+        <!-- Sidebar end -->
+        <div id="page-content-wrapper">
+
+            <header>
+                <nav class="navbar navbar-light bg-light justify-content-between l-40">
+                    <div>
+                        <a class="navbar-brand">Stockifier</a>
+                    </div>
+                    <div class="form-inline">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                            id="txtStockSearch">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </div>
+                </nav>
+            </header>
+            <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+                <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Link</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+             -->
+            <div class="container-fluid d-flex">
+                <div class="stocks w-50 main-container">
+                    <h2>Your Stocks</h2>
+                    <div class="stocks-list">
+                        <ul class="list-group" id="myStocks">
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>infosys</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2"><b>TCS</b></div>
+                                <div class="badge badge-primary badge-pill p-2" id="stockTitle">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>BGT</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>TCS</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>TCS</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>TCS</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>TCS</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>TCS</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                            <li
+                                class="list-group-item mr-auto list-group-item-action d-flex justify-content-between align-items-center">
+                                <div class="mr-auto p-2" id="stockTitle"><b>TCS</b></div>
+                                <div class="badge badge-primary badge-pill p-2">TCS</div>
+                                <div class="p-2">
+                                    <button class="notify btn btn-success btn-sm">
+                                        <i class="material-icons">
+                                            notifications_active
+                                        </i></button>
+                                </div>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="spotlight w-50 main-container">
+                    <h2>
+                        Spotlight
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+    <!--  <header>
+        <nav class="navbar navbar-light bg-light justify-content-between l-40">
+            <div>
+                <button class="btn btn-primary"><i class="material-icons">menu</i></button>
+                <a class="navbar-brand">Stockifier</a>
+            </div>
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </nav>
+    </header> -->
+
+    <!-- <sidebar class="d-flex justify-content-center align-items-center h-100">
+        <div class="sidebar-title"></div>
+        <div class="sidebar-content"></div>
+    </sidebar>
+
+ -->
+
+
+</body>
+<!-- JS Imports -->
+
+<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+
+<script src="js/modules.js"></script>
+
+</html>
