@@ -2,6 +2,11 @@
     --primary-color: #4522a8;
     --primary-light: #7b4fdb;
     --primary-dark: #000078;
+    --warning-color:#ffc400;
+    --warning-dark:#c17900;
+    --danger-color:#d32f2f;
+    --danger-dark:#9a0007;
+    --danger-light:#ff6659;
 }
 
 body {}
@@ -68,7 +73,7 @@ sidebar {
 .stocks {}
 
 .main-container {
-    //background: red;
+    /* background: red; */
     height: 100%;
     min-height: 100%;
     padding: 1rem;
@@ -85,4 +90,57 @@ sidebar {
 
 .stocks-list .list-group-item-action {
     padding: 1rem;
+    //display: flex;
+}
+
+.mdc-fab.notify{
+    background-color: var(--warning-color) !important;
+}
+.mdc-fab.delete{
+    background-color: var(--danger-color) !important;
+
+}
+
+
+
+
+/* typeahead styles */
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-menu {    /* used to be tt-dropdown-menu in older versions */
+  width: 422px;
+  margin-top: 4px;
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  line-height: 24px;
+}
+
+.tt-suggestion.tt-cursor,.tt-suggestion:hover {
+  color: #fff;
+  background-color: var(--primary-light);
+
+}
+
+.tt-suggestion p {
+  margin: 0;
 }

@@ -4,7 +4,7 @@ let win
 
 function createWindow() {
 
-    win = new BrowserWindow({ width: 1000, height: 700 })
+    win = new BrowserWindow({ width: 1200, height: 700 })
     let srcDir = "src/"
     win.loadFile(srcDir + 'index.html')
 

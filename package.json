@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "postinstall": "install-app-deps",
+    "rebuild": "electron-rebuild -f -w sqlite3"
   },
   "repository": {
     "type": "git",
@@ -29,10 +30,14 @@
   "homepage": "https://github.com/jainsamyak/Stockifier#readme",
   "devDependencies": {
     "electron": "^4.0.6",
+    "electron-builder": "^20.38.5",
+    "electron-rebuild": "^1.8.4",
     "electron-reload": "^1.4.0"
   },
   "dependencies": {
+    "alphavantage": "^1.2.0",
     "bootstrap": "^4.3.1",
-    "jquery": "^3.3.1"
+    "jquery": "^3.3.1",
+    "sqlite3": "^4.0.6"
   }
 }
