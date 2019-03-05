@@ -8,15 +8,12 @@ function searchStock(stockName, callback) {
     https.get(apiUrl, (res) => {
         res.on('data', (data) => {
             //console.log(String(data))
-            let d = (JSON.parse(data)).bestMatches;
-            let results = []
-            d.forEach(element => {
-                results.push(element['2. name'])
-            });
+
             //console.log(results);
-            callback(results)
+
+            callback(data)
         })
     })
 }
-
 module.exports.searchStock = searchStock;
+module.exports.alphavantage = alpha;

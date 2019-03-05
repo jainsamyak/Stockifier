@@ -21,9 +21,7 @@
 
         <!-- Sidebar -->
         <div class="bg-light border-right" id="sidebar-wrapper">
-            <button class="btn btn-primary float-right" id="menu-toggle"><i class="material-icons">
-                    menu
-                </i></button>
+
             <div class="list-group list-group-flush">
                 <a href="#" class="list-group-item list-group-item-action bg-light">Notify
                     <i class="material-icons">
@@ -47,14 +45,14 @@
         <div id="page-content-wrapper">
 
             <header>
-                <nav class="navbar navbar-light bg-light justify-content-between l-40">
+                <nav class="navbar navbar-light bgmdc-primary-light justify-content-between l-40">
+                    <div>
+                        <button class="mdc-icon-button material-icons" id="menu-toggle">menu</button>
+                    </div>
                     <div>
                         <a class="navbar-brand">Stockifier</a>
                     </div>
-                    <div id="the-basics">
-                        <input class="typeahead form-control" type="search" placeholder="Search for a stock"
-                            id="typeahead">
-                    </div>
+
                 </nav>
             </header>
             <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -93,7 +91,32 @@
              -->
             <div class="container-fluid d-flex">
                 <div class="stocks w-50 main-container">
-                    <h3>Your Stocks</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <h3>Your Stocks</h3>
+                        <div class="dropdown">
+                            <button class="mdc-fab mdc-fab--extended" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="material-icons mdc-fab__icon">add</span>
+                                <span class="mdc-fab__label">Add stock</span>
+                            </button>
+
+                            <div class="dropdown-menu p-2" style="width:15rem !important;"
+                                aria-labelledby="dropdownMenuButton">
+                                <div id="the-basics">
+                                    <input class="typeahead form-control w-100" type="search"
+                                        placeholder="Search for a stock" id="typeahead">
+                                </div>
+
+                                <button class="mdc-button mdc-button--raised" id="btnAddStock">
+                                    <span class="mdc-button__label">Proceed</span>
+                                </button>
+
+
+
+                            </div>
+                        </div>
+                    </div>
                     <div class="stocks-list">
                         <div class="mdc-text-field mdc-text-field--outlined w-100">
                             <input class="mdc-text-field__input" type="search" id="txtStockSearch">
@@ -107,10 +130,6 @@
                         </div>
                         <div>
                             <ul class="list-group" id="myStocks">
-
-
-
-
 
                             </ul>
                         </div>
