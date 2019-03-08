@@ -31,3 +31,4 @@ function initDB() {
 
 
 module.exports.initDB = initDB;
+module.exports.conn = db;

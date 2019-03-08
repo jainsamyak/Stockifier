@@ -9,7 +9,6 @@
     --danger-light:#ff6659;
 }
 
-body {}
 
 sidebar {
     top: 0;
@@ -61,6 +60,15 @@ sidebar {
 
 /* Custom CSS */
 
+.notify-pill{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+button:focus{
+    text-decoration: none;
+    outline: none !important;
+}
 #sidebar-wrapper .list-group-item-action,
 #sidebar-wrapper .list-group-item-action {
     padding: 2rem;
@@ -85,7 +93,7 @@ sidebar {
 
 .stocks-list .list-group {
     overflow-y: scroll;
-    height: 30rem;
+    height: 25rem;
 }
 
 .stocks-list .list-group-item-action {

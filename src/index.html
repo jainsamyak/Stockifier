@@ -52,6 +52,27 @@
                     <div>
                         <a class="navbar-brand">Stockifier</a>
                     </div>
+                    <div class="btn-group dropleft">
+                        <button type="button" class="mdc-button" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="material-icons">
+                                notification_important
+                            </i>
+                            <span class="badge badge-pill badge-danger notify-pill">2</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <!-- Dropdown menu links -->
+                            <button class="dropdown-item" type="button">Action</button>
+                            <button class="dropdown-item" type="button">Another action</button>
+                            <button class="dropdown-item" type="button">Something else here</button>
+                        </div>
+                        <div class="ml-2">
+                            <button class="mdc-button mdc-button--raised material-icons">replay</button>
+
+                        </div>
+                    </div>
+
+                    <!-- Split dropleft button -->
 
                 </nav>
             </header>
@@ -108,7 +129,9 @@
                                         placeholder="Search for a stock" id="typeahead">
                                 </div>
 
-                                <button class="mdc-button mdc-button--raised" id="btnAddStock">
+                                <div class="dropdown-divider"></div>
+                                <button class="mdc-button mdc-button--raised mdc-button--fullwidth w-100"
+                                    id="btnAddStock">
                                     <span class="mdc-button__label">Proceed</span>
                                 </button>
 
@@ -130,7 +153,9 @@
                         </div>
                         <div>
                             <ul class="list-group" id="myStocks">
-
+                                <li class="list-group-item justify-content-center align-items-center">
+                                    Loading Stocks..
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -163,6 +188,43 @@
     </sidebar>
 
  -->
+
+    <!-- Alert Dialog -->
+    <div class="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
+        aria-describedby="my-dialog-content">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+                <h2 class="mdc-dialog__title" id="my-dialog-title">
+                    Hello
+                </h2>
+                <div class="mdc-dialog__content" id="my-dialog-content">
+                    Dialog body text goes here.
+                </div>
+                <footer class="mdc-dialog__actions">
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
+                        <span class="mdc-button__label">Cancel</span>
+                    </button>
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+                        <span class="mdc-button__label">Delete</span>
+                    </button>
+                </footer>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+    <!-- Snackbar -->
+    <div class="mdc-snackbar">
+        <div class="mdc-snackbar__surface">
+            <div class="mdc-snackbar__label" role="status" aria-live="polite" id="snackbar-msg">
+                <!-- Snackbar message here populated through JS -->
+            </div>
+            <div class="mdc-snackbar__actions">
+                <button type="button" class="mdc-button mdc-snackbar__action">OK</button>
+            </div>
+        </div>
+    </div>
 
 
 </body>
