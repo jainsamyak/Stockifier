@@ -6,22 +6,29 @@ function initDB() {
 
     db.serialize(function () {
         db.run(`CREATE TABLE IF NOT EXISTS "Stocks" (
-	"ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	    "ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
         "StockName"	TEXT,
         "Index"	TEXT,
         "High"	NUMERIC,
         "Low"	NUMERIC
     )`);
-
-        /* var stmt = db.prepare("INSERT INTO Stocks ('Stockname','Index','High','Low') VALUES (?,?,?,?)");
-        for (var i = 0; i < 10; i++) {
-    
-            var d = new Date();
-            var n = d.toLocaleTimeString();
-            stmt.run('TCS', 'NSE:TCS', i, i + 1999);
-        }
-        stmt.finalize(); */
-
+        /* CREATE TABLE "Notifications"(
+            "ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
+            "type"	TEXT,
+            "Title"	TEXT,
+            "Content"	TEXT,
+            "Created_On" DATETIME DEFAULT CURRENT_TIMESTAMP,
+            "StockID"	INTEGER
+        )
+ */
+        db.run(`CREATE TABLE IF NOT EXISTS "Notifications"(
+            "ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
+            "Type"	TEXT,
+            "Title"	TEXT,
+            "Content"	TEXT,
+            "StockID"	INTEGER,
+            "Created_On" DATETIME DEFAULT CURRENT_TIMESTAMP
+        )`);
 
     });
 

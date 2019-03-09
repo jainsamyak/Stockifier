@@ -1,6 +1,8 @@
 const db = require('./js/database');
 const stockapi = require('./js/stockapi')
 
+
+
 var stockMatches = []; //Global variable for stock matches
 var substringMatcher = function () {
     return function findMatches(string, syncWait, cb) {
@@ -26,6 +28,19 @@ var substringMatcher = function () {
 };
 
 
+function deleteNotification(notifID) {
+    let conn = db.conn;
+    conn.run("DELETE FROM Notifications WHERE ID=?", notifID, (err) => {
+        if (err) {
+            console.log(err);
+        }
+    })
+}
+function sendNotification(title, body) {
+    let myNotification = new Notification(title, {
+        body: body
+    });
+}
 
 
 $("#menu-toggle").click(function (e) {
@@ -35,6 +50,7 @@ $("#menu-toggle").click(function (e) {
 
 
 $(document).ready(function () {
+
 
 
     $('.dropdown-menu').click(function (e) {
@@ -143,6 +159,8 @@ $(document).ready(function () {
         mdc.textField.MDCTextField.attachTo(tf);
     }
 
+    const list = mdc.list.MDCList.attachTo(document.querySelector('.mdc-list'));
+    const listItemRipples = list.listElements.map((listItemEl) => mdc.ripple.MDCRipple.attachTo(listItemEl));
 
     const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 
@@ -171,7 +189,7 @@ $(document).ready(function () {
     /* Function to handle stockDelete */
     $(document).on('click', ".btnDeleteStock", function () {
         openDeleteDialog("Delete Stock", "Are you sure you want to delete the stock?", $(this).attr('data-delete-id'));
-    })
+    });
 
     const sb = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
     function openSnackbar(snackbarMsg) {
@@ -223,6 +241,56 @@ $(document).ready(function () {
 
     }
     initializeStockView();
+
+
+    function loadNotifications() {
+        let conn = db.conn;
+
+        get_notifications_qry = "SELECT *,COUNT(*) as count FROM Notifications";
+        conn.get(get_notifications_qry, (err, row) => {
+
+            if (row.count > 0) {
+                sendNotification("Stockifier", "You have new Notifications!");
+            }
+        })
+        conn.each(get_notifications_qry, (err, row) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            $notifView = $('#notificationList');
+            $notifView.append(`
+            <li class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+                <div class="toast-header">
+                    <i class="material-icons">
+                        fiber_manual_record
+                    </i> <strong class="mr-auto">`+ row.Title + `</strong>
+                    <small class="text-muted">`+ row.Created_On + `</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
+                        aria-label="Close">
+                        <span onclick='deleteNotification(` + row.ID + `)'>&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    <ul class="mdc-list">
+                        <li class="mdc-list-item" tabindex="0">
+                            <span class="mdc-list-item__text">
+                                `+ row.Content + `
+                            </span>
+                            <span class="mdc-list-item__meta material-icons">info</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </li>
+            
+            `);
+            $('.toast').toast('show');
+        });
+
+
+    }
+    loadNotifications();
 
 
 
