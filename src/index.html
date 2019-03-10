@@ -23,7 +23,8 @@
         <div class="bg-light border-right" id="sidebar-wrapper">
 
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action bg-light">Notify
+                <a href="#" onclick="showNotificationWindow()"
+                    class="list-group-item list-group-item-action bg-light">Notify
                     <i class="material-icons">
                         notifications_active
                     </i>
@@ -58,7 +59,7 @@
                             <i class="material-icons">
                                 notification_important
                             </i>
-                            <span class="badge badge-pill badge-danger notify-pill">2</span>
+                            <span class="badge badge-pill badge-danger notify-pill" id="notificationNumber">2</span>
                         </button>
                         <div class="dropdown-menu notification-menu dropdown-menu-right">
                             <!-- Dropdown menu links -->
@@ -179,7 +180,7 @@
                             </div>
                         </div>
                         <div>
-                            <ul class="list-group" id="myStocks">
+                            <ul class="list-group mdc-list" id="myStocks">
                                 <li class="list-group-item justify-content-center align-items-center">
                                     Loading Stocks..
                                 </li>
@@ -223,10 +224,10 @@
             <div class="mdc-dialog__surface">
                 <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
                 <h2 class="mdc-dialog__title" id="my-dialog-title">
-                    Hello
+
                 </h2>
                 <div class="mdc-dialog__content" id="my-dialog-content">
-                    Dialog body text goes here.
+
                 </div>
                 <footer class="mdc-dialog__actions">
                     <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
@@ -253,9 +254,8 @@
         </div>
     </div>
 
-    <audio id="notificationSound">
-        <source src="../res/audio/to-the-point.ogg" type="audio/ogg">
-    </audio>
+
+
 
 </body>
 <!-- JS Imports -->

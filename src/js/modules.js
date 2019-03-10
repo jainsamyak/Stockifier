@@ -1,7 +1,8 @@
 const db = require('./js/database');
 const stockapi = require('./js/stockapi')
-
-
+const electron = require('electron')
+const BrowserWindow = electron.remote.BrowserWindow
+const path=require('path')
 
 var stockMatches = []; //Global variable for stock matches
 var substringMatcher = function () {
@@ -34,12 +35,26 @@ function deleteNotification(notifID) {
         if (err) {
             console.log(err);
         }
+        console.log("Deleted");
     })
 }
 function sendNotification(title, body) {
     let myNotification = new Notification(title, {
         body: body
     });
+}
+
+
+function showNotificationWindow() {
+    let options = {
+        width: 650,
+        height: 500
+    };
+    let notifWinPath = path.join("file://", __dirname, "/notify.html")
+    let notifWin = new BrowserWindow(options)
+    notifWin.on('close', () => notifWin = null)
+    notifWin.loadURL(notifWinPath)
+    notifWin.show()
 }
 
 
@@ -159,9 +174,7 @@ $(document).ready(function () {
         mdc.textField.MDCTextField.attachTo(tf);
     }
 
-    const list = mdc.list.MDCList.attachTo(document.querySelector('.mdc-list'));
-    const listItemRipples = list.listElements.map((listItemEl) => mdc.ripple.MDCRipple.attachTo(listItemEl));
-
+    
     const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 
     function openDeleteDialog(dialogTitle, dialogMsg, deleteID) {
@@ -213,7 +226,7 @@ $(document).ready(function () {
                 conn.each("SELECT ID,\"Index\",StockName,High,Low FROM Stocks", function (err, row) {
                     $stocksList.append(`
             
-                    <li class="list-group-item justify-content-center align-items-center">
+                    <li class="list-group-item list-group-item-action justify-content-center align-items-center">
                         <div class="mr-auto p-2" id="stockTitle"><b>`+ row.Index + `</b><br>
                                 <span id="stockTitle">`+ row.StockName + `</span></div>
                             <div class="badge badge-success badge-pill p-2">High: `+ row.High + `</div>
@@ -227,6 +240,7 @@ $(document).ready(function () {
                             </div>
                     </li>
                     `);
+                    
                 });
             }
             else {
@@ -252,41 +266,43 @@ $(document).ready(function () {
             if (row.count > 0) {
                 sendNotification("Stockifier", "You have new Notifications!");
             }
-        })
-        conn.each(get_notifications_qry, (err, row) => {
-            if (err) {
-                console.log(err);
-                return;
-            }
-            $notifView = $('#notificationList');
-            $notifView.append(`
-            <li class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
-                <div class="toast-header">
-                    <i class="material-icons">
-                        fiber_manual_record
-                    </i> <strong class="mr-auto">`+ row.Title + `</strong>
-                    <small class="text-muted">`+ row.Created_On + `</small>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
-                        aria-label="Close">
-                        <span onclick='deleteNotification(` + row.ID + `)'>&times;</span>
-                    </button>
-                </div>
-                <div class="toast-body">
-                    <ul class="mdc-list">
-                        <li class="mdc-list-item" tabindex="0">
-                            <span class="mdc-list-item__text">
-                                `+ row.Content + `
-                            </span>
-                            <span class="mdc-list-item__meta material-icons">info</span>
-                        </li>
-                    </ul>
-                </div>
-
-            </li>
             
-            `);
-            $('.toast').toast('show');
-        });
+            $('#notificationNumber').html(row.count);
+            conn.each(get_notifications_qry, (err, row) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                $notifView = $('#notificationList');
+                $notifView.append(`
+                <li class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+                    <div class="toast-header">
+                        <i class="material-icons">
+                            fiber_manual_record
+                        </i> <strong class="mr-auto">`+ row.Title + `</strong>
+                        <small class="text-muted">`+ row.Created_On + `</small>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
+                            aria-label="Close">
+                            <span onclick='deleteNotification(` + row.ID + `)'>&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        <ul class="mdc-list">
+                            <li class="mdc-list-item" tabindex="0">
+                                <span class="mdc-list-item__text">
+                                    `+ row.Content + `
+                                </span>
+                                <span class="mdc-list-item__meta material-icons">info</span>
+                            </li>
+                        </ul>
+                    </div>
+    
+                </li>
+                
+                `);
+                $('.toast').toast('show');
+            });
+        })
 
 
     }

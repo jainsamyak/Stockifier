@@ -21,6 +21,12 @@ function initDB() {
             "StockID"	INTEGER
         )
  */
+        /* CREATE TABLE "Alerts" (
+	"ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"StockID"	INTEGER,
+	"TargetPrice"	NUMERIC,
+	"direction"	TEXT
+) */
         db.run(`CREATE TABLE IF NOT EXISTS "Notifications"(
             "ID"	INTEGER PRIMARY KEY AUTOINCREMENT,
             "Type"	TEXT,

@@ -1,0 +1,21 @@
+:root {
+    --primary-color: #4522a8;
+    --primary-light: #ece8f4;
+    --primary-dark: #d7d7e3;
+    --warning-color:#ffc400;
+    --warning-dark:#c17900;
+    --danger-color:#d32f2f;
+    --danger-dark:#9a0007;
+    --danger-light:#ff6659;
+}
+
+body{
+    background-color: rgba(255,255,255,0.95) !important;
+}
+button:focus{
+    text-decoration: none;
+    outline: none !important;
+}
+.tab-pane{
+    margin-top: 1rem;
+}

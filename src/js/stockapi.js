@@ -15,5 +15,15 @@ function searchStock(stockName, callback) {
         })
     })
 }
+
+function getStockQuote(stockID, callback) {
+    alpha.data.quote(stockID).then(data => {
+        callback(data['Global Quote']['05. price'])
+    });
+}
+
+
+
 module.exports.searchStock = searchStock;
 module.exports.alphavantage = alpha;
+module.exports.getStockQuote = getStockQuote;
