@@ -1,6 +1,6 @@
 const db = require('./js/database');
 const stockapi = require('./js/stockapi')
-
+const currencySymbol = require('currency-symbol-map')
 
 function getStocks() {
     $stocks = $('#stocksList');
@@ -19,6 +19,11 @@ function getStocks() {
 }
 function getCurrentVal(params) {
     $stock = $('#stocksList').val();
+    let conn = db.conn;
+    conn.get('SELECT Currency FROM Stocks WHERE "Index"=?', $stock, (err, row) => {
+        let currency = row.Currency;
+        $('#txtCurrencySymbol').html(currencySymbol(currency));
+    });
     stockapi.getStockQuote($stock, (price) => {
         $('#txtStockVal').val(price)
     });
@@ -28,14 +33,16 @@ function setNotification() {
     $currVal = $('#txtStockVal').val();
     $newVal = $('#txtTargetVal').val();
     let conn = db.conn;
+    let autoRenew = Number($('#chkAutoRenew').is(':checked'));
+
     conn.get('SELECT ID FROM Stocks WHERE "Index"=?', $stock, (err, row) => {
 
         let stockID = row["ID"];
         if ($newVal > $currVal) {
-            $alertQry = "INSERT INTO Alerts (StockID,TargetPrice,direction) Values(?,?,'up')";
+            $alertQry = "INSERT INTO Alerts (StockID,TargetPrice,direction) Values(?,?,'up',?,?)";
         }
         else {
-            $alertQry = "INSERT INTO Alerts (StockID,TargetPrice,direction) Values(?,?,'down')";
+            $alertQry = "INSERT INTO Alerts (StockID,TargetPrice,direction) Values(?,?,'down',?,?)";
 
         }
         conn.run($alertQry, [stockID, $newVal], () => {
@@ -59,4 +66,4 @@ for (const button of buttons) {
     mdc.ripple.MDCRipple.attachTo(button);
 }
 
-select = mdc.select.MDCSelect.attachTo(document.querySelector('.mdc-select'));
+mdc.select.MDCSelect.attachTo(document.querySelector('.mdc-select'));
