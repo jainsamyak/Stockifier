@@ -11,9 +11,10 @@ function createWindow() {
 
     win.webContents.openDevTools()
 
-
-    win.on('closed', () => {
-        win = null
+    win.on('close', (event) => {
+        //win = null
+        event.preventDefault()
+        win.hide()
     })
 }
 

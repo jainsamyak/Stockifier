@@ -19,3 +19,8 @@ button:focus{
 .tab-pane{
     margin-top: 1rem;
 }
+.mdc-fab.delete{
+    background-color: var(--danger-color) !important;
+
+}
+

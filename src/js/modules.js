@@ -2,7 +2,7 @@ const db = require('./js/database');
 const stockapi = require('./js/stockapi')
 const electron = require('electron')
 const BrowserWindow = electron.remote.BrowserWindow
-const path=require('path')
+const path = require('path')
 
 var stockMatches = []; //Global variable for stock matches
 var substringMatcher = function () {
@@ -36,19 +36,22 @@ function deleteNotification(notifID) {
             console.log(err);
         }
         console.log("Deleted");
-    })
+    });
+    loadNotifications();
 }
 function sendNotification(title, body) {
     let myNotification = new Notification(title, {
         body: body
     });
 }
-
+function reloadWin(params) {
+    electron.remote.getCurrentWindow().reload();
+}
 
 function showNotificationWindow() {
     let options = {
         width: 650,
-        height: 500
+        height: 550
     };
     let notifWinPath = path.join("file://", __dirname, "/notify.html")
     let notifWin = new BrowserWindow(options)
@@ -57,6 +60,14 @@ function showNotificationWindow() {
     notifWin.show()
 }
 
+function initalizeAlerts() {
+    let conn = db.conn;
+    conn.each("SELECT a.*,s.* FROM Alerts a,Stocks s WHERE a.StockID=s.ID", (err, row) => {
+        console.log(row);
+    });
+}
+
+initalizeAlerts();
 
 $("#menu-toggle").click(function (e) {
     e.preventDefault();
@@ -174,7 +185,7 @@ $(document).ready(function () {
         mdc.textField.MDCTextField.attachTo(tf);
     }
 
-    
+
     const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
 
     function openDeleteDialog(dialogTitle, dialogMsg, deleteID) {
@@ -240,7 +251,7 @@ $(document).ready(function () {
                             </div>
                     </li>
                     `);
-                    
+
                 });
             }
             else {
@@ -263,45 +274,48 @@ $(document).ready(function () {
         get_notifications_qry = "SELECT *,COUNT(*) as count FROM Notifications";
         conn.get(get_notifications_qry, (err, row) => {
 
-            if (row.count > 0) {
-                sendNotification("Stockifier", "You have new Notifications!");
-            }
-            
             $('#notificationNumber').html(row.count);
-            conn.each(get_notifications_qry, (err, row) => {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                $notifView = $('#notificationList');
-                $notifView.append(`
-                <li class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
-                    <div class="toast-header">
-                        <i class="material-icons">
-                            fiber_manual_record
-                        </i> <strong class="mr-auto">`+ row.Title + `</strong>
-                        <small class="text-muted">`+ row.Created_On + `</small>
-                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
-                            aria-label="Close">
-                            <span onclick='deleteNotification(` + row.ID + `)'>&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body">
-                        <ul class="mdc-list">
-                            <li class="mdc-list-item" tabindex="0">
-                                <span class="mdc-list-item__text">
-                                    `+ row.Content + `
-                                </span>
-                                <span class="mdc-list-item__meta material-icons">info</span>
-                            </li>
-                        </ul>
-                    </div>
-    
-                </li>
-                
-                `);
-                $('.toast').toast('show');
-            });
+            $('#notificationCount').html(row.count);
+            if (row.count > 0) {
+                $('#notificationNumber').toggleClass('d-none');
+                sendNotification("Stockifier", "You have new Notifications!");
+
+                conn.each(get_notifications_qry, (err, row) => {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    $notifView = $('#notificationList');
+                    $notifView.append(`
+                    <li class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+                        <div class="toast-header">
+                            <i class="material-icons">
+                                fiber_manual_record
+                            </i> <strong class="mr-auto">`+ row.Title + `</strong>
+                            <small class="text-muted">`+ row.Created_On + `</small>
+                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
+                                aria-label="Close">
+                                <span onclick='deleteNotification(` + row.ID + `)'>&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            <ul class="mdc-list">
+                                <li class="mdc-list-item" tabindex="0">
+                                    <span class="mdc-list-item__text">
+                                        `+ row.Content + `
+                                    </span>
+                                    <span class="mdc-list-item__meta material-icons">info</span>
+                                </li>
+                            </ul>
+                        </div>
+        
+                    </li>
+                    
+                    `);
+                    $('.toast').toast('show');
+                });
+            }
+
         })
 
 
@@ -311,7 +325,6 @@ $(document).ready(function () {
 
 
     $("#txtStockSearch").on("keyup", function () {
-        console.log("press")
         var value = $(this).val().toLowerCase();
         console.log(value)
         $("#myStocks li").filter(function () {

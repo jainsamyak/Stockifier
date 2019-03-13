@@ -48,7 +48,7 @@
             <header>
                 <nav class="navbar navbar-light bgmdc-primary-light justify-content-between l-40">
                     <div>
-                        <button class="mdc-icon-button material-icons" id="menu-toggle">menu</button>
+                        <button class="mdc-icon-button material-icons mdc-ripple-surface" id="menu-toggle">menu</button>
                     </div>
                     <div>
                         <a class="navbar-brand">Stockifier</a>
@@ -59,43 +59,22 @@
                             <i class="material-icons">
                                 notification_important
                             </i>
-                            <span class="badge badge-pill badge-danger notify-pill" id="notificationNumber">2</span>
+                            <span class="badge badge-pill badge-danger notify-pill d-none"
+                                id="notificationNumber">0</span>
                         </button>
                         <div class="dropdown-menu notification-menu dropdown-menu-right">
                             <!-- Dropdown menu links -->
+                            <div class="container d-flex justify-content-center align-items-center">
+                                <h6>Notifications (<span id="notificationCount">0</span>)</h6>
+                            </div>
+                            <hr>
                             <ul class="mdc-list" id="notificationList">
-
-                                <li class="toast" role="alert" aria-live="assertive" aria-atomic="true"
-                                    data-autohide="false">
-                                    <div class="toast-header">
-                                        <i class="material-icons">
-                                            fiber_manual_record
-                                        </i> <strong class="mr-auto">Stock Alert</strong>
-                                        <small class="text-muted">just now</small>
-                                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
-                                            aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="toast-body">
-                                        <ul class="mdc-list">
-                                            <li class="mdc-list-item" tabindex="0">
-                                                <span class="mdc-list-item__text">
-                                                    Content Here
-                                                </span>
-                                                <span class="mdc-list-item__meta material-icons">info</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                </li>
-
-
-
+                                <!-- Notifications List -->
                             </ul>
                         </div>
                         <div class="ml-2">
-                            <button class="mdc-button mdc-button--raised material-icons">replay</button>
+                            <button class="mdc-button mdc-button--raised material-icons"
+                                onclick="reloadWin()">replay</button>
 
                         </div>
                     </div>
