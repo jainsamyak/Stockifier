@@ -78,7 +78,21 @@ button:focus{
     float: right;
 }
 
-.stocks {}
+.stockSelected{
+    
+    /* animation:  selectStock 300ms ease-in-out forwards;
+    overflow: hidden; */
+}
+@keyframes selectStock{
+    from{
+    transform: translate(0px,0px);
+    
+    }
+    to{
+    transform: translate(10px,0px);
+    
+    }
+}
 
 .main-container {
     /* background: red; */
@@ -111,7 +125,7 @@ button:focus{
 .notification-menu{
     min-width: 20rem !important;
     max-height: 20rem !important;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 

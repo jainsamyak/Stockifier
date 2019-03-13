@@ -23,7 +23,6 @@ function getStockQuote(stockID, callback) {
 }
 
 
-
 module.exports.searchStock = searchStock;
 module.exports.alphavantage = alpha;
 module.exports.getStockQuote = getStockQuote;

@@ -37,12 +37,14 @@ function deleteNotification(notifID) {
         }
         console.log("Deleted");
     });
-    loadNotifications();
+    loadNotifications(false);
 }
 function sendNotification(title, body) {
-    let myNotification = new Notification(title, {
-        body: body
-    });
+    Notification.requestPermission().then(() => {
+        var myNotification = new Notification(title, {
+            body: body
+        });
+    })
 }
 function reloadWin(params) {
     electron.remote.getCurrentWindow().reload();
@@ -60,10 +62,125 @@ function showNotificationWindow() {
     notifWin.show()
 }
 
+function checkTarget(symbol, targetVal, direction, callback) {
+    stockapi.getStockQuote(symbol, (currVal) => {
+        if (direction == "up") {
+            if (targetVal >= currVal) {
+                callback(true);
+                return;
+            }
+        }
+        else {
+            if (targetVal <= currVal) {
+                callback(true);
+                return;
+            }
+        }
+        callback(false);
+    })
+}
+
+function loadNotifications(enabled) {
+    let conn = db.conn;
+
+    get_notifications_qry = "SELECT Count(*) as count FROM Notifications";
+    conn.get(get_notifications_qry, (err, row) => {
+
+        $('#notificationNumber').html(row.count);
+        $('#notificationCount').html(row.count);
+        if (row.count > 0) {
+            $('#notificationNumber').removeClass('d-none');
+            if (enabled) sendNotification("Stockifier", "You have new Notifications!");
+            $notifView = $('#notificationList');
+            $notifView.html('');
+            get_notifications_qry = "SELECT * FROM Notifications";
+            conn.each(get_notifications_qry, (err, row) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                $notifView.append(`
+                        <li class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+                            <div class="toast-header d-flex">
+                                <i class="material-icons">
+                                    info
+                                </i>
+                                <strong class="mr-auto">`+ row.Title + `</strong>
+                                <small class="text-muted">`+ row.Created_On + `</small>
+                                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
+                                    aria-label="Close">
+                                    <span onclick='deleteNotification(` + row.ID + `)'>&times;</span>
+                                </button>
+                            </div>
+                            <div class="toast-body">
+                                `+ row.Content + `
+                            </div>
+            
+                        </li>
+                        
+                        `);
+                $('.toast').toast('show');
+            });
+
+
+        }
+        else {
+            $('#notificationNumber').addClass('d-none');
+        }
+
+    });
+
+
+}
+
 function initalizeAlerts() {
     let conn = db.conn;
-    conn.each("SELECT a.*,s.* FROM Alerts a,Stocks s WHERE a.StockID=s.ID", (err, row) => {
+    let i = 0;
+    let notifQry = "INSERT INTO Notifications (Type,Title,Content,StockID) VALUES (?,?,?,?)";
+    let direction = "falling";
+    conn.each("SELECT a.ID as AlertID,a.*,s.* FROM Alerts a,Stocks s WHERE a.StockID=s.ID", (err, row) => {
+
+        if (row['direction'] == "up") {
+            direction = "rising";
+        }
         console.log(row);
+        var notif = setInterval(() => {
+
+            console.log(notif);
+            checkTarget(row['Index'], row['TargetPrice'], row['Direction'], (beat) => {
+                console.log(row['ID'] + "ok" + beat);
+                if (beat) {
+                    conn.run(notifQry, ['normal', "Stockifier - " + row['Index'], row['StockName'] + " beat your target value of " + row['TargetPrice'] + " while " + direction, row['StockID']], (err) => {
+                        //Inserting into notification
+                        console.log(err);
+                    });
+                    sendNotification("Stockifier - " + row['Index'], row['StockName'] + " beat your target value of " + row['TargetPrice']);
+                    loadNotifications(false);
+                    if (row['Auto_Renew'] == 0) {
+                        // Delete Alert when notified
+                        clearInterval(notif);
+                        conn.run("DELETE FROM Alerts WHERE ID=?", row['AlertID'], (err) => {
+                            console.log(err);
+                        });
+                    }
+                    else {
+                        if (row['direction'] == "up") {
+                            conn.run("UPDATE Alerts SET TargetPrice=TargetPrice+2 WHERE ID=?", row['AlertID'], (err) => {
+                                console.log(err);
+                            });
+                        }
+                        else {
+                            conn.run("UPDATE Alerts SET TargetPrice=TargetPrice-2 WHERE ID=?", row['AlertID'], (err) => {
+                                console.log(err);
+                            });
+                        }
+                    }
+                }
+
+            });
+        }, row['frequency'] * 2000 + i); //Frequency in minutes plus some seconds to avoid API error
+        i += 10000;
     });
 }
 
@@ -237,7 +354,7 @@ $(document).ready(function () {
                 conn.each("SELECT ID,\"Index\",StockName,High,Low FROM Stocks", function (err, row) {
                     $stocksList.append(`
             
-                    <li class="list-group-item list-group-item-action justify-content-center align-items-center">
+                    <li class="list-group-item list-group-item-action justify-content-center align-items-center stockSelected">
                         <div class="mr-auto p-2" id="stockTitle"><b>`+ row.Index + `</b><br>
                                 <span id="stockTitle">`+ row.StockName + `</span></div>
                             <div class="badge badge-success badge-pill p-2">High: `+ row.High + `</div>
@@ -268,59 +385,8 @@ $(document).ready(function () {
     initializeStockView();
 
 
-    function loadNotifications() {
-        let conn = db.conn;
 
-        get_notifications_qry = "SELECT *,COUNT(*) as count FROM Notifications";
-        conn.get(get_notifications_qry, (err, row) => {
-
-            $('#notificationNumber').html(row.count);
-            $('#notificationCount').html(row.count);
-            if (row.count > 0) {
-                $('#notificationNumber').toggleClass('d-none');
-                sendNotification("Stockifier", "You have new Notifications!");
-
-                conn.each(get_notifications_qry, (err, row) => {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    $notifView = $('#notificationList');
-                    $notifView.append(`
-                    <li class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
-                        <div class="toast-header">
-                            <i class="material-icons">
-                                fiber_manual_record
-                            </i> <strong class="mr-auto">`+ row.Title + `</strong>
-                            <small class="text-muted">`+ row.Created_On + `</small>
-                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast"
-                                aria-label="Close">
-                                <span onclick='deleteNotification(` + row.ID + `)'>&times;</span>
-                            </button>
-                        </div>
-                        <div class="toast-body">
-                            <ul class="mdc-list">
-                                <li class="mdc-list-item" tabindex="0">
-                                    <span class="mdc-list-item__text">
-                                        `+ row.Content + `
-                                    </span>
-                                    <span class="mdc-list-item__meta material-icons">info</span>
-                                </li>
-                            </ul>
-                        </div>
-        
-                    </li>
-                    
-                    `);
-                    $('.toast').toast('show');
-                });
-            }
-
-        })
-
-
-    }
-    loadNotifications();
+    loadNotifications(true);
 
 
 
