@@ -238,12 +238,12 @@ function loadSpotlight(stockID) {
                 labels: new Array(20).fill(0),
                 datasets: [{
                     type: 'line',
-                    label: 'Demo',
+                    label: 'Stock Price',
                     fill: false,
                     data: time_series_points,
-                    backgroundColor: 'rgba(69, 34, 168,0.8)',
-                    borderColor: 'rgba(69, 34, 168,0.7)',
                     borderWidth: 2,
+                    borderColor: 'rgba(196, 22, 98,1)',
+                    backgroundColor: 'rgba(196, 22, 98,0.7)',
                     pointRadius: 3
                 }]
             },
