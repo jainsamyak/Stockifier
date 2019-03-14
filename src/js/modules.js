@@ -1,8 +1,17 @@
-const db = require('./js/database');
-const stockapi = require('./js/stockapi')
+const db = require('./js/database')
 const electron = require('electron')
+const Chart = require('chart.js')
 const BrowserWindow = electron.remote.BrowserWindow
 const path = require('path')
+
+
+
+
+
+if (window.localStorage.getItem("apiKey") != null) {
+    window.stockapi = require('./js/stockapi');
+}
+
 
 var stockMatches = []; //Global variable for stock matches
 var substringMatcher = function () {
@@ -78,6 +87,18 @@ function checkTarget(symbol, targetVal, direction, callback) {
         }
         callback(false);
     })
+}
+
+function setApiKey() {
+    $key = $('#txtApiKey').val();
+    window.localStorage.apiKey = $key;
+    reloadWin();
+}
+
+/* Obtain AlphaVantage API Key */
+function openAPIWin() {
+    electron.shell.openExternal("https://www.alphavantage.co/support/#api-key");
+    return false;
 }
 
 function loadNotifications(enabled) {
@@ -179,12 +200,72 @@ function initalizeAlerts() {
                 }
 
             });
-        }, row['frequency'] * 2000 + i); //Frequency in minutes plus some seconds to avoid API error
+        }, row['frequency'] * 1000 + i); //Frequency in minutes plus some seconds to avoid API error
         i += 10000;
     });
 }
 
-initalizeAlerts();
+//initalizeAlerts();
+
+function normalize(val, min, max) {
+    return (val - min) / (max - min);
+}
+function loadSpotlight(stockID) {
+    stockapi.getStockData(stockID, (data) => {
+        console.log("Stock Data");
+        console.log(data);
+        keys = Object.keys(data);
+        let time_series_points = [];
+        let volumes = [];
+        i = 1
+        for (const key of keys) {
+            if (i % 5 == 0) {
+                time_series_points.push(Number(data[key]['4. close']));
+                volumes.push(Number(data[key]['5. volume']));
+            }
+            i += 1;
+        }
+        let min_volume = Math.min.apply(null, volumes);
+        let max_volume = Math.max.apply(null, volumes);
+        let norm_volumes = volumes.map((el) => normalize(el, min_volume, max_volume) * 10 * Math.min.apply(null, time_series_points));
+
+        /* initialize chart */
+        var ctx = $("#myChart");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                type: 'bar',
+                labels: new Array(20).fill(0),
+                datasets: [{
+                    type: 'line',
+                    label: 'Demo',
+                    fill: false,
+                    data: time_series_points,
+                    backgroundColor: 'rgba(69, 34, 168,0.8)',
+                    borderColor: 'rgba(69, 34, 168,0.7)',
+                    borderWidth: 2,
+                    pointRadius: 3
+                }]
+            },
+            options: {
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                }
+            }
+        });
+
+    })
+}
+loadSpotlight('TCS.NSE');
 
 $("#menu-toggle").click(function (e) {
     e.preventDefault();
@@ -192,7 +273,10 @@ $("#menu-toggle").click(function (e) {
 });
 
 
+
 $(document).ready(function () {
+
+
 
 
 
@@ -302,8 +386,18 @@ $(document).ready(function () {
         mdc.textField.MDCTextField.attachTo(tf);
     }
 
+    const apidialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('#apikeyDialog'));
+    $('#btnOpenKeyDialog').on('click', () => {
+        apidialog.open();
+    })
+    if (window.localStorage.getItem("apiKey") == null) {
+        apidialog.open();
+    }
 
-    const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog'));
+
+
+    /* Alert Dialog */
+    const dialog = mdc.dialog.MDCDialog.attachTo(document.querySelector('.mdc-dialog-deletediag'));
 
     function openDeleteDialog(dialogTitle, dialogMsg, deleteID) {
         $dialogTitle = $("#my-dialog-title");
@@ -354,19 +448,26 @@ $(document).ready(function () {
                 conn.each("SELECT ID,\"Index\",StockName,High,Low FROM Stocks", function (err, row) {
                     $stocksList.append(`
             
-                    <li class="list-group-item list-group-item-action justify-content-center align-items-center stockSelected">
-                        <div class="mr-auto p-2" id="stockTitle"><b>`+ row.Index + `</b><br>
-                                <span id="stockTitle">`+ row.StockName + `</span></div>
-                            <div class="badge badge-success badge-pill p-2">High: `+ row.High + `</div>
-                            <div class="p-2">
-                                <button class="mdc-fab mdc-fab--mini notify" data-notify-id=`+ row.ID + `>
-                                    <span class="mdc-fab__icon material-icons">notifications_active</span>
-                                </button>
-                                <button class="mdc-fab mdc-fab--mini delete btnDeleteStock" data-delete-id=`+ row.ID + `>
-                                    <span class="mdc-fab__icon material-icons">delete</span>
-                                </button>
-                            </div>
-                    </li>
+                                <li
+                                    class="list-group-item list-group-item-action justify-content-center align-items-center stockSelected">
+                                    <div class="mr-auto p-2" id="stockTitle"><b>`+ row.Index + `</b>
+                                        <div class="badge badge-success badge-pill p-2 float-right">High: `+ row.High + `</div>
+                                        <br>
+                                        <span id="stockTitle">`+ row.StockName + `</span>
+                                    </div>
+                                    <div class="p-2 d-flex justify-content-around">
+                                        <button class="mdc-fab mdc-fab--mini mdc-fab--extended notify" data-notify-id=`+ row.ID + `>
+                                            <span class="mdc-fab__icon material-icons">notifications_active</span>
+                                            <span class="mdc-fab__label">Notify</span>
+                                        </button>
+                                        <button class="mdc-fab mdc-fab--mini delete mdc-fab--extended btnDeleteStock"
+                                            data-delete-id=`+ row.ID + `>
+                                            <span class="mdc-fab__icon material-icons">delete</span>
+                                            <span class="mdc-fab__label">Delete</span>
+
+                                        </button>
+                                    </div>
+                                </li>
                     `);
 
                 });

@@ -120,8 +120,9 @@ function setNotification() {
 
                 }
                 else {
-
+                    $('#alertForm').trigger("reset");
                     openSnackbar("Alert Added!");
+
                 }
 
             });

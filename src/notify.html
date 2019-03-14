@@ -29,101 +29,100 @@
     </nav>
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-home-tab">
-            <div class="container">
-                <div class="form-group">
-                    <div class="mdc-select w-100">
-                        <i class="mdc-select__dropdown-icon"></i>
-                        <select class="mdc-select__native-control" id="stocksList" onchange="getCurrentVal()">
-                            <option value="" disabled selected></option>
-                        </select>
-                        <label class="mdc-floating-label">Select Stock</label>
-                        <div class="mdc-line-ripple"></div>
-                    </div>
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="txtCurrencySymbol">$</span>
-                    </div>
-                    <input type="text" id="txtStockVal" class="form-control disabled" disabled
-                        placeholder="Current Value">
-                </div>
-
-
-                <div class="form-group">
-                    <div class="mdc-text-field mdc-text-field--outlined w-100">
-                        <input type="number" id="txtTargetVal" class="mdc-text-field__input" min="0" required>
-                        <div class="mdc-notched-outline">
-                            <div class="mdc-notched-outline__leading"></div>
-                            <div class="mdc-notched-outline__notch">
-                                <label for="tf-outlined" class="mdc-floating-label">Target Stock Price</label>
-                            </div>
-                            <div class="mdc-notched-outline__trailing"></div>
+            <form id="alertForm">
+                <div class="container">
+                    <div class="form-group">
+                        <div class="mdc-select w-100">
+                            <i class="mdc-select__dropdown-icon"></i>
+                            <select class="mdc-select__native-control" id="stocksList" onchange="getCurrentVal()"
+                                required>
+                                <option value="" disabled selected></option>
+                            </select>
+                            <label class="mdc-floating-label">Select Stock</label>
+                            <div class="mdc-line-ripple"></div>
                         </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="mdc-text-field mdc-text-field--outlined w-100">
-                        <input type="number" id="txtFrequency" class="mdc-text-field__input" min="5"
-                            placeholder="0 minutes">
-                        <div class="mdc-notched-outline">
-                            <div class="mdc-notched-outline__leading"></div>
-                            <div class="mdc-notched-outline__notch">
-                                <label for="tf-outlined" class="mdc-floating-label">Update Frequency</label>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="txtCurrencySymbol">$</span>
+                        </div>
+                        <input type="text" id="txtStockVal" class="form-control disabled" disabled
+                            placeholder="Current Value">
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="mdc-text-field mdc-text-field--outlined w-100">
+                            <input type="number" id="txtTargetVal" class="mdc-text-field__input" min="0" required>
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                    <label for="tf-outlined" class="mdc-floating-label">Target Stock Price</label>
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
                             </div>
-                            <div class="mdc-notched-outline__trailing"></div>
                         </div>
                     </div>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="chkAutoRenew">
-                    <label class="form-check-label">Auto renew alert</label>
-                </div>
-
-
-
-
-            </div>
+                    <div class="form-group">
+                        <div class="mdc-text-field mdc-text-field--outlined w-100">
+                            <input type="number" id="txtFrequency" class="mdc-text-field__input" min="5"
+                                placeholder="0 minutes" required>
+                            <div class="mdc-notched-outline">
+                                <div class="mdc-notched-outline__leading"></div>
+                                <div class="mdc-notched-outline__notch">
+                                    <label for="tf-outlined" class="mdc-floating-label">Update Frequency</label>
+                                </div>
+                                <div class="mdc-notched-outline__trailing"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="chkAutoRenew">
+                        <label class="form-check-label">Auto renew alert</label>
+                    </div>
+            </form>
         </div>
-        <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-profile-tab">
+    </div>
+    <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-profile-tab">
 
-            <div class="container">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">Stock Index</th>
-                            <th scope="col">Target Price</th>
-                            <th scope="col">Auto Renew</th>
-                            <th scope="col">Frequency</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Delete</th>
+        <div class="container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Stock Index</th>
+                        <th scope="col">Target Price</th>
+                        <th scope="col">Auto Renew</th>
+                        <th scope="col">Frequency</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Delete</th>
 
-                        </tr>
-                    </thead>
-                    <tbody id="alertsView">
-                        <!-- Alerts View  -->
-                    </tbody>
-                </table>
-            </div>
-
+                    </tr>
+                </thead>
+                <tbody id="alertsView">
+                    <!-- Alerts View  -->
+                </tbody>
+            </table>
         </div>
 
-        <div class="container d-flex justify-content-around pt-3 fixed-bottom mb-5">
-            <div></div>
-            <button class="mdc-button mdc-button--raised" style="background-color:var(--danger-color)" id="closeWindow">
-                <span class="mdc-button__label">Close</span>
-                <i class="material-icons mdc-button__icon">
-                    cancel
-                </i>
-            </button>
-            <button class="mdc-button mdc-button--raised" onclick="setNotification()">
-                <span class="mdc-button__label">Set Notification</span>
-                <i class="material-icons mdc-button__icon">
-                    add_alert
-                </i>
-            </button>
-            <div></div>
-        </div>
+    </div>
+
+    <div class="container d-flex justify-content-around pt-3 fixed-bottom mb-5">
+        <div></div>
+        <button class="mdc-button mdc-button--raised" style="background-color:var(--danger-color)" id="closeWindow">
+            <span class="mdc-button__label">Close</span>
+            <i class="material-icons mdc-button__icon">
+                cancel
+            </i>
+        </button>
+        <button class="mdc-button mdc-button--raised" onclick="setNotification()">
+            <span class="mdc-button__label">Set Notification</span>
+            <i class="material-icons mdc-button__icon">
+                add_alert
+            </i>
+        </button>
+        <div></div>
+    </div>
     </div>
 
     <!-- Snackbar -->

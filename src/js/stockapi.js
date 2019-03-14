@@ -1,7 +1,7 @@
-const apiKey = '0M1OCUZTI229BTFV'
+//const apiKey = window.localStorage.apiKey;
+const apiKey = '0M1OCUZTI229BTFV';
 const alpha = require('alphavantage')({ key: apiKey })
 const https = require('https')
-
 
 function searchStock(stockName, callback) {
     let apiUrl = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=' + stockName + '&apikey=' + apiKey
@@ -22,7 +22,16 @@ function getStockQuote(stockID, callback) {
     });
 }
 
+function getStockData(stockID, callback) {
+    alpha.data.intraday(stockID, 'compact', 'json', '1min').then(data => {
+        data = data['Time Series (1min)'];
+        callback(data);
+    });
+}
 
-module.exports.searchStock = searchStock;
-module.exports.alphavantage = alpha;
-module.exports.getStockQuote = getStockQuote;
+module.exports = {
+    searchStock: searchStock,
+    alphavantage: alpha,
+    getStockQuote: getStockQuote,
+    getStockData: getStockData
+}

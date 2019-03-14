@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Roboto" rel="stylesheet">
 
 
 </head>
@@ -54,6 +54,11 @@
                         <a class="navbar-brand">Stockifier</a>
                     </div>
                     <div class="btn-group">
+                        <button class="mdc-button mdc-button--outlined" id="btnOpenKeyDialog">
+                            <i class="material-icons">
+                                vpn_key
+                            </i>
+                        </button>
                         <button type="button" class="mdc-button" data-toggle="dropdown" aria-haspopup="true"
                             aria-expanded="false">
                             <i class="material-icons">
@@ -163,6 +168,7 @@
                                 <li class="list-group-item justify-content-center align-items-center">
                                     Loading Stocks..
                                 </li>
+
                             </ul>
                         </div>
                     </div>
@@ -171,6 +177,9 @@
                     <h3>
                         Spotlight
                     </h3>
+                    <div class="conatiner">
+                        <canvas id="myChart" width="400" height="400"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -196,8 +205,38 @@
 
  -->
 
+    <!-- Stock API Key Dialog -->
+    <div class="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="apikeyDialog"
+        aria-describedby="apikeyDialog" id="apikeyDialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+                <h2 class="mdc-dialog__title">
+                    Add/Change API Key
+                </h2>
+                <div class="mdc-dialog__content">
+                    <div class="form-group m-2 w-80">
+                        <input type="text" class="form-control" placeholder="Your key" id="txtApiKey" required>
+                    </div>
+                </div>
+                <footer class="mdc-dialog__actions">
+                    <a onclick="openAPIWin()" href="javascript:void(0)">Obtain API Key</a>
+                    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
+                        <span class="mdc-button__label">Cancel</span>
+                    </button>
+                    <button type="button" class="mdc-button mdc-button--raised mdc-dialog__button"
+                        data-mdc-dialog-action="yes" onclick="setApiKey()">
+                        <span class="mdc-button__label">Confirm</span>
+                    </button>
+                </footer>
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+
+
     <!-- Alert Dialog -->
-    <div class="mdc-dialog" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
+    <div class="mdc-dialog mdc-dialog-deletediag" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
         aria-describedby="my-dialog-content">
         <div class="mdc-dialog__container">
             <div class="mdc-dialog__surface">
