@@ -72,7 +72,6 @@ function createWindow() {
             win.hide()
         } else {
             win = null
-            app.quit()
         }
 
     })
