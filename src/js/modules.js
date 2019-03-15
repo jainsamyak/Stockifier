@@ -3,6 +3,7 @@ const electron = require('electron')
 const Chart = require('chart.js')
 const BrowserWindow = electron.remote.BrowserWindow
 const path = require('path')
+const currencySymbol = require('currency-symbol-map')
 
 
 
@@ -62,7 +63,7 @@ function reloadWin(params) {
 function showNotificationWindow() {
     let options = {
         width: 650,
-        height: 550
+        height: 600
     };
     let notifWinPath = path.join("file://", __dirname, "/notify.html")
     let notifWin = new BrowserWindow(options)
@@ -251,7 +252,6 @@ function loadSpotlight(element, stockID) {
 }
 //loadSpotlight(this, 'TCS.NSE');
 
-
 /* Initialize chart */
 var ctx = $("#myChart");
 var myChart = new Chart(ctx, {
@@ -309,6 +309,25 @@ var myChart = new Chart(ctx, {
 });
 
 
+function updateStocks() {
+    let conn = db.conn;
+    let t = 20000;
+    conn.each('SELECT ID,"Index" FROM Stocks', (err, row) => {
+        setTimeout(() => {
+            stockapi.getStockUpdates(row.Index, (data) => {
+                data = data['Global Quote'];
+                console.log(data);
+                conn.run("UPDATE Stocks SET High=" + data['03. high'] + ", Low=" + data['04. low'] + " WHERE ID=?", row.ID);
+            });
+
+        }, t);
+        t += 20000;
+    });
+}
+/* Timely updation of stock database */
+updateStocks();
+
+
 $("#menu-toggle").click(function (e) {
     e.preventDefault();
     setTimeout(() => {
@@ -340,41 +359,37 @@ $(document).ready(function () {
             val = val.split(' ').splice(0, 1).join(" ");
             let conn = db.initDB();
             console.log(val);
-            try {
+            stockapi.searchStock(val, (data) => {
+                console.log(String(data));
+                try {
+                    data = JSON.parse(data).bestMatches;
 
-                stockapi.searchStock(val, (data) => {
-                    console.log(String(data));
-                    try {
-                        data = JSON.parse(data).bestMatches;
+                } catch (error) {
+                    openSnackbar("An error occured");
+                    return;
+                }
+                console.log(data);
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
 
-                    } catch (error) {
-                        openSnackbar("An error occured");
-                        return;
+                    if (element['1. symbol'] == stIndex) {
+
+                        insertStockQry = "INSERT INTO Stocks ('Stockname','Index','High','Low','Currency') VALUES ('" + element['2. name'] + "','" + stIndex + "',0,0,'" + element['8. currency'] + "')"
+                        console.log(insertStockQry);
+                        conn.run(insertStockQry, (err) => {
+                            if (err) console.log(err);
+
+                            openSnackbar("Stock Added!");
+                            initializeStockView();
+
+                        });
+                        break;
                     }
-                    console.log(data);
-                    for (let index = 0; index < data.length; index++) {
-                        const element = data[index];
+                }
 
-                        if (element['1. symbol'] == stIndex) {
+            });
 
-                            insertStockQry = "INSERT INTO Stocks ('Stockname','Index','High','Low','Currency') VALUES ('" + element['2. name'] + "','" + stIndex + "',0,0,'" + element['8. currency'] + "')"
-                            console.log(insertStockQry);
-                            conn.run(insertStockQry, (err) => {
-                                if (err) console.log(err);
 
-                                openSnackbar("Stock Added!");
-                                initializeStockView();
-
-                            });
-                            break;
-                        }
-                    }
-
-                });
-
-            } catch (error) {
-                alert("An error occured!" + error);
-            }
         }
         else {
             try {
@@ -423,6 +438,10 @@ $(document).ready(function () {
         });
 
     /* Initialize ripple for all buttons */
+    const ripples = document.querySelectorAll('.mdc-ripple-surface');
+    for (const ripple of ripples) {
+        mdc.ripple.MDCRipple.attachTo(ripple);
+    }
     const buttons = document.querySelectorAll('button');
     for (const button of buttons) {
         mdc.ripple.MDCRipple.attachTo(button);
@@ -491,13 +510,13 @@ $(document).ready(function () {
         $stocksList.html('');
         conn.get("SELECT COUNT(*) as count FROM Stocks", (err, row) => {
             if (row.count > 0) {
-                conn.each("SELECT ID,\"Index\",StockName,High,Low FROM Stocks", function (err, row) {
+                conn.each("SELECT ID,\"Index\",StockName,High,Low,Currency FROM Stocks", function (err, row) {
                     $stocksList.append(`
             
                                 <li
                                     class="list-group-item list-group-item-action justify-content-center align-items-center" onclick='loadSpotlight(this,"`+ row.Index + `")'>
                                     <div class="mr-auto p-2" id="stockTitle"><b>`+ row.Index + `</b>
-                                        <div class="badge badge-success badge-pill p-2 float-right">High: `+ row.High + `</div>
+                                        <div class="badge badge-success badge-pill p-2 float-right">High: `+ currencySymbol(row.Currency) + row.High + `</div>
                                         <br>
                                         <span id="stockTitle">`+ row.StockName + `</span>
                                     </div>
@@ -531,11 +550,7 @@ $(document).ready(function () {
     }
     initializeStockView();
 
-
-
     loadNotifications(true);
-
-
 
     $("#txtStockSearch").on("keyup", function () {
         var value = $(this).val().toLowerCase();

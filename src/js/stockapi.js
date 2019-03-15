@@ -21,6 +21,11 @@ function getStockQuote(stockID, callback) {
         callback(data['Global Quote']['05. price'])
     });
 }
+function getStockUpdates(stockID, callback) {
+    alpha.data.quote(stockID).then(data => {
+        callback(data)
+    });
+}
 
 function getStockData(stockID, callback) {
     alpha.data.intraday(stockID, 'compact', 'json', '1min').then(data => {
@@ -33,5 +38,6 @@ module.exports = {
     searchStock: searchStock,
     alphavantage: alpha,
     getStockQuote: getStockQuote,
-    getStockData: getStockData
+    getStockData: getStockData,
+    getStockUpdates:getStockUpdates
 }

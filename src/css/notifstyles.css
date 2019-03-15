@@ -24,3 +24,58 @@ button:focus{
 
 }
 
+/* Toggle button */
+
+.label-purple { background-color: #9C27B0; }
+.label-deep-purple { background-color: #673AB7; }
+.label-green { background-color: #4CAF50; }
+.label-light-green { background-color: #8BC34A; }
+
+/* THE TOGGLE
+============================*/
+.material-toggle {
+	display: block;
+	min-height: 40px;
+}
+.material-toggle input[type="checkbox"] {
+	display: none;
+}
+.material-toggle label {
+	cursor: pointer;
+	height: 0px;
+	position: relative; 
+	width: 40px; 
+}
+.material-toggle > label::before {
+	background: rgb(0, 0, 0);
+	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+	border-radius: 8px;
+	content: '';
+	height: 16px;
+	margin-top: -8px;
+	position:absolute;
+	opacity: 0.3;
+	transition: all 0.4s ease-in-out;
+	width: 40px;
+}
+.material-toggle > label::after {
+	background: rgb(255, 255, 255);
+	border-radius: 16px;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+	content: '';
+	height: 24px;
+	left: -4px;
+	margin-top: -8px;
+	position: absolute;
+	top: -4px;
+	transition: all 0.3s ease-in-out;
+	width: 24px;
+}
+.material-toggle > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+.material-toggle > input[type="checkbox"]:checked + label::after {
+    background: inherit;
+    left: 20px;
+}

@@ -1,5 +1,5 @@
-const { app, BrowserWindow } = require('electron')
-
+const { app, Tray, Menu, dialog, BrowserWindow } = require('electron')
+const path = require('path')
 let win
 
 function createWindow() {
@@ -8,13 +8,73 @@ function createWindow() {
     let srcDir = "src/"
     win.loadFile(srcDir + 'index.html')
 
-
     win.webContents.openDevTools()
 
+    /* App Tray */
+    tray = new Tray(path.join(__dirname, 'res', 'stocks.png'))
+    const contextMenu = Menu.buildFromTemplate([
+        {
+            label: 'Stockifier',
+            enabled: false
+        },
+        {
+            label: 'View',
+            submenu: [
+                {
+                    label: 'Show Window',
+                    click() {
+                        win.show()
+                    }
+                },
+                { role: 'reload' },
+                { role: 'forcereload' },
+                { role: 'toggledevtools' },
+                { type: 'separator' },
+                { role: 'resetzoom' },
+                { role: 'zoomin' },
+                { role: 'zoomout' },
+                { type: 'separator' },
+                { role: 'togglefullscreen' }
+            ]
+        },
+        {
+            role: 'separator',
+            type: 'separator'
+        },
+        {
+            role: 'window',
+            submenu: [
+                { role: 'minimize' },
+                { role: 'close' }
+            ]
+        },
+        {
+            role: 'quit',
+            click() {
+                app.quit()
+            }
+        }
+    ])
+    tray.setToolTip('This is my application.')
+    tray.setContextMenu(contextMenu)
+
     win.on('close', (event) => {
-        //win = null
-        event.preventDefault()
-        win.hide()
+        let choice = dialog.showMessageBox(win,
+            {
+                type: 'question',
+                buttons: ['Yes', 'No'],
+                title: 'Confirm',
+                message: 'Do you really want to close the application?'
+            }
+        )
+        if (choice === 1) {
+            event.preventDefault()
+            win.hide()
+        } else {
+            win = null
+            app.quit()
+        }
+
     })
 }
 

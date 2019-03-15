@@ -97,7 +97,12 @@ function setNotification() {
     $updateFreq = $('#txtFrequency').val();
     $autoRenew = Number($('#chkAutoRenew').is(':checked'));
     let conn = db.conn;
-
+    $btnBeat = Number($('#MaterialTogglePurple').is(':checked'));
+    if ($btnBeat == 0) {
+        $beating = "down";
+    } else {
+        $beating = "up";
+    }
     conn.get('SELECT ID FROM Stocks WHERE "Index"=?', $stock, (err, row) => {
 
         if (err) {
@@ -108,12 +113,9 @@ function setNotification() {
 
 
             let stockID = row["ID"];
-            if ($newVal > $currVal) {
-                $alertQry = "INSERT INTO Alerts (StockID,TargetPrice,direction,Auto_Renew,frequency) Values(?,?,'up',?,?)";
-            }
-            else {
-                $alertQry = "INSERT INTO Alerts (StockID,TargetPrice,direction,Auto_Renew,frequency) Values(?,?,'down',?,?)";
-            }
+
+            $alertQry = "INSERT INTO Alerts (StockID,TargetPrice,direction,Auto_Renew,frequency) Values(?,?,'" + $beating + "',?,?)";
+
             conn.run($alertQry, [stockID, $newVal, $autoRenew, $updateFreq], (err) => {
                 if (err) {
                     alert(err);
