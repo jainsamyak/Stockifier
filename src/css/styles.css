@@ -79,21 +79,11 @@ button:focus{
 }
 
 .stockSelected{
-    
-    /* animation:  selectStock 300ms ease-in-out forwards;
-    overflow: hidden; */
+    border-left: 7px solid #6d55ae !important;
+    border-radius: 5px !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.5rem !important;
 }
-@keyframes selectStock{
-    from{
-    transform: translate(0px,0px);
-    
-    }
-    to{
-    transform: translate(10px,0px);
-    
-    }
-}
-
 .main-container {
     /* background: red; */
     height: 100%;

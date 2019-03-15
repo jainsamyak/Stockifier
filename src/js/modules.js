@@ -210,65 +210,111 @@ function initalizeAlerts() {
 function normalize(val, min, max) {
     return (val - min) / (max - min);
 }
-function loadSpotlight(stockID) {
+function loadSpotlight(element, stockID) {
+
+    $current = $('.stockSelected');
+    $current.removeClass('stockSelected');
+    $(element).addClass('stockSelected');
+
+
+    let conn = db.conn;
+    conn.get('SELECT * FROM Stocks WHERE "Index"=?', stockID, (err, row) => {
+        myChart.options.title.text = row.StockName;
+    });
     stockapi.getStockData(stockID, (data) => {
-        console.log("Stock Data");
-        console.log(data);
-        keys = Object.keys(data);
+
+
+        let keys = Object.keys(data);
+        keys = keys.reverse()
+        let dates = [];
         let time_series_points = [];
         let volumes = [];
-        i = 1
+        let i = 0
         for (const key of keys) {
             if (i % 5 == 0) {
+                dates.push(String(keys[i]).split(' ')[1].split(':'));
                 time_series_points.push(Number(data[key]['4. close']));
                 volumes.push(Number(data[key]['5. volume']));
             }
             i += 1;
         }
-        let min_volume = Math.min.apply(null, volumes);
-        let max_volume = Math.max.apply(null, volumes);
-        let norm_volumes = volumes.map((el) => normalize(el, min_volume, max_volume) * 10 * Math.min.apply(null, time_series_points));
+        dates = dates.map((el) => el[0] + ":" + el[1]);
 
-        /* initialize chart */
-        var ctx = $("#myChart");
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                type: 'bar',
-                labels: new Array(20).fill(0),
-                datasets: [{
-                    type: 'line',
-                    label: 'Stock Price',
-                    fill: false,
-                    data: time_series_points,
-                    borderWidth: 2,
-                    borderColor: 'rgba(196, 22, 98,1)',
-                    backgroundColor: 'rgba(196, 22, 98,0.7)',
-                    pointRadius: 3
-                }]
-            },
-            options: {
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: false
-                        }
-                    }]
-                }
-            }
-        });
 
-    })
+        /* Dynamic updation of chart */
+        myChart.data.labels = dates;
+        myChart.data.datasets[0].data = time_series_points;
+        myChart.data.datasets[1].data = volumes;
+        myChart.update();
+
+    });
 }
-loadSpotlight('TCS.NSE');
+//loadSpotlight(this, 'TCS.NSE');
+
+
+/* Initialize chart */
+var ctx = $("#myChart");
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        type: 'bar',
+        datasets: [{
+            type: 'line',
+            label: 'Stock Price',
+            fill: false,
+            data: [],
+            borderWidth: 2,
+            borderColor: 'rgba(196, 22, 98,1)',
+            backgroundColor: 'rgba(196, 22, 98,1)',
+            pointRadius: 3,
+            yAxisID: 'price'
+        }, {
+            type: 'bar',
+            label: 'Volume',
+            fill: false,
+            data: [],
+            backgroundColor: 'rgba(190, 135, 211,0.4)',
+            yAxisID: 'volume'
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Select a Stock to view performance'
+        },
+        scales: {
+            xAxes: [{
+                gridLines: {
+                    display: false
+                }
+            }],
+            yAxes: [{
+                type: 'linear',
+                position: 'left',
+                id: 'price',
+                gridLines: {
+                    display: false
+                }
+            }, {
+                type: 'linear',
+                position: 'right',
+                id: 'volume',
+                gridLines: {
+                    display: false
+                }
+            }]
+        }
+    }
+});
+
 
 $("#menu-toggle").click(function (e) {
     e.preventDefault();
+    setTimeout(() => {
+        myChart.resize();
+
+    }, 1000);
     $("#wrapper").toggleClass("toggled");
 });
 
@@ -449,7 +495,7 @@ $(document).ready(function () {
                     $stocksList.append(`
             
                                 <li
-                                    class="list-group-item list-group-item-action justify-content-center align-items-center stockSelected">
+                                    class="list-group-item list-group-item-action justify-content-center align-items-center" onclick='loadSpotlight(this,"`+ row.Index + `")'>
                                     <div class="mr-auto p-2" id="stockTitle"><b>`+ row.Index + `</b>
                                         <div class="badge badge-success badge-pill p-2 float-right">High: `+ row.High + `</div>
                                         <br>
