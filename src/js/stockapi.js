@@ -57,8 +57,8 @@ function getStockPrices(stockID, interval, callback) {
         });
     } else if (interval == "week") {
         alpha.data.intraday(stockID, 'compact', 'json', '60min').then(data => {
+            console.log(data)
             data = data['Time Series (60min)'];
-
             let keys = Object.keys(data);
             keys = keys.reverse()
             let dates = [];
@@ -66,7 +66,7 @@ function getStockPrices(stockID, interval, callback) {
             let volumes = [];
             let i = 0
             while (i <= 42) {
-                dates.push(keys[i]);
+                dates.push(keys[keys.length - 1 - i]);
                 prices.push(Number(data[keys[keys.length - 1 - i]]['4. close']));
                 volumes.push(Number(data[keys[keys.length - 1 - i]]['5. volume']));
                 i += 1;
@@ -87,13 +87,12 @@ function getStockPrices(stockID, interval, callback) {
             let today = d.getDate();
             let currMonth = d.getMonth();
             while ((String(keys[keys.length - 1 - i]).split('-')[2] < today && String(keys[keys.length - 1 - i]).split('-')[1] != currMonth) || (String(keys[keys.length - 1 - i]).split('-')[2] > today && String(keys[keys.length - 1 - i]).split('-')[1] == currMonth)) {
-                dates.push(keys[i]);
+                dates.push(keys[keys.length - 1 - i]);
                 prices.push(Number(data[keys[keys.length - 1 - i]]['5. adjusted close']));
                 volumes.push(Number(data[keys[keys.length - 1 - i]]['6. volume']));
                 i += 1;
             }
             callback([prices.reverse(), volumes.reverse(), dates.reverse()]);
-            //callback(data);
         });
 
     } else if (interval == "6months") {
@@ -109,14 +108,13 @@ function getStockPrices(stockID, interval, callback) {
             let today = d.getDate();
             let currMonth = d.getMonth();
             while (i <= 25) {
-                dates.push(keys[i]);
+                dates.push(keys[keys.length - 1 - i]);
                 prices.push(Number(data[keys[keys.length - 1 - i]]['5. adjusted close']));
                 volumes.push(Number(data[keys[keys.length - 1 - i]]['6. volume']));
                 i += 1;
             }
 
             callback([prices.reverse(), volumes.reverse(), dates.reverse()]);
-            //callback(data);
         });
 
     } else if (interval == "max") {
@@ -133,7 +131,7 @@ function getStockPrices(stockID, interval, callback) {
             let currMonth = d.getMonth();
             for (const key of keys) {
 
-                dates.push(keys[i]);
+                dates.push(keys[keys.length - 1 - i]);
                 prices.push(Number(data[key]['5. adjusted close']));
                 volumes.push(Number(data[key]['6. volume']));
                 i += 1;
@@ -145,7 +143,6 @@ function getStockPrices(stockID, interval, callback) {
     }
 
 }
-
 
 module.exports = {
     searchStock: searchStock,
