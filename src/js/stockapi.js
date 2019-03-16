@@ -131,7 +131,7 @@ function getStockPrices(stockID, interval, callback) {
             let currMonth = d.getMonth();
             for (const key of keys) {
 
-                dates.push(keys[keys.length - 1 - i]);
+                dates.push(keys[i]);
                 prices.push(Number(data[key]['5. adjusted close']));
                 volumes.push(Number(data[key]['6. volume']));
                 i += 1;

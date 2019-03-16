@@ -35,12 +35,21 @@ function updatePriceChart(interval) {
         volumes = data[1];
         dates = data[2];
 
+        merged_t = [];
+        merged_v = []
+        for (let index = 0; index < dates.length; index++) {
+            merged_t.push({ x: dates[index], y: time_series_points[index] });
+            merged_v.push({ x: dates[index], y: volumes[index] })
+        }
         /* Dynamic updation of chart */
-        priceChart.data.labels = dates;
-        priceChart.data.datasets[0].data = time_series_points;
-        priceChart.data.datasets[1].data = volumes;
+        //priceChart.data.labels = dates;
+        priceChart.data.datasets[0].data = merged_t
+        priceChart.data.datasets[1].data = merged_v;
         if (interval == "max") {
             priceChart.data.datasets[0].pointRadius = 0;
+        }
+        else {
+            priceChart.data.datasets[0].pointRadius = 3;
         }
         priceChart.update();
 
@@ -80,10 +89,12 @@ var priceChart = new Chart(ctx, {
         },
         scales: {
             xAxes: [{
-                display: false,
+                display: true,
                 gridLines: {
                     display: false
-                }
+                },
+                distribution: 'series',
+                type: 'time'
             }],
             yAxes: [{
                 type: 'linear',
