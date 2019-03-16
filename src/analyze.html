@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Stockifier - Analyze</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/analyzestyles.css">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+
+<body>
+
+
+    <div class="d-flex justify-content-center pb-2 m-2" style="color: rgba(0,0,0,0.8)">
+        <h3>Analyze stock Performance</h3>
+    </div>
+    <div class="container">
+        <div class="form-group">
+            <div class="mdc-select w-100">
+                <i class="mdc-select__dropdown-icon"></i>
+                <select class="mdc-select__native-control" id="stocksList" onchange="updatePriceChart('min')" required>
+                    <option value="" disabled selected></option>
+                </select>
+                <label class="mdc-floating-label">Select Stock</label>
+                <div class="mdc-line-ripple"></div>
+            </div>
+        </div>
+
+        <nav>
+            <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-price" role="tab"
+                    aria-selected="true">Stock Price</a>
+                <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-indicators" role="tab"
+                    aria-selected="false">Key Indicators</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-price" role="tabpanel">
+                <div class="btn-group btn-group-sm mt-2 d-flex" role="group" aria-label="...">
+                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('min')">Min</button>
+                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('week')">1 week</button>
+                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('month')">1
+                        month</button>
+                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('6months')">6
+                        months</button>
+                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('max')">Max</button>
+                </div>
+                <canvas id="priceChart">
+
+                </canvas>
+
+
+
+            </div>
+            <div class="tab-pane fade" id="nav-indicators" role="tabpanel">...</div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+</body>
+<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script src="js/analyze.js"></script>
+
+
+</html>

@@ -5,10 +5,6 @@ const BrowserWindow = electron.remote.BrowserWindow
 const path = require('path')
 const currencySymbol = require('currency-symbol-map')
 
-
-
-
-
 if (window.localStorage.getItem("apiKey") != null) {
     window.stockapi = require('./js/stockapi');
 }
@@ -56,7 +52,7 @@ function sendNotification(title, body) {
         });
     })
 }
-function reloadWin(params) {
+function reloadWin() {
     electron.remote.getCurrentWindow().reload();
 }
 
@@ -70,6 +66,18 @@ function showNotificationWindow() {
     notifWin.on('close', () => notifWin = null)
     notifWin.loadURL(notifWinPath)
     notifWin.show()
+}
+
+function showAnalyzeWindow() {
+    let options = {
+        width: 900,
+        height: 600
+    };
+    let analyzeWinPath = path.join("file://", __dirname, "/analyze.html")
+    let analyzeWin = new BrowserWindow(options)
+    analyzeWin.on('close', () => analyzeWin = null)
+    analyzeWin.loadURL(analyzeWinPath)
+    analyzeWin.show()
 }
 
 function checkTarget(symbol, targetVal, direction, callback) {

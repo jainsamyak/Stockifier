@@ -51,13 +51,16 @@
                             placeholder="Current Value">
                     </div>
 
-                    <div class="form-group d-flex">
+                    <div class="form-group">
 
-                        <label for="" class="mr-3">Target Beating Down-Up</label>
-                        <div class="material-toggle">
-                            <input id="MaterialTogglePurple" name="MaterialTogglePurple" type="checkbox" />
-                            <label for="MaterialTogglePurple" class="label-purple"></label>
-                        </div>
+                        <label for="">
+                            Target Beating Down-Up
+
+                        </label>
+                        <label class="form-switch">
+                            <input type="checkbox" id="chkBeating">
+                            <i></i>
+                        </label>
                     </div>
                     <div class="form-group">
                         <div class="mdc-text-field mdc-text-field--outlined w-100">
@@ -84,9 +87,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="chkAutoRenew">
-                        <label class="form-check-label">Auto renew alert</label>
+                    <div class="form-group">
+                        <label for="">
+                            Auto renew alert
+                        </label>
+                        <label class="form-switch">
+                            <input type="checkbox" id="chkAutoRenew">
+                            <i></i>
+                        </label>
+
                     </div>
             </form>
         </div>

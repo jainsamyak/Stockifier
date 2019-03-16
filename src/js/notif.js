@@ -15,7 +15,7 @@ function getStocks() {
             console.log(err);
         } else {
             $stocks.append(`
-                <option value="`+ row['Index'] + `">` + row.StockName + `</option>
+                <option value="`+ row['Index'] + `">` + row.StockName + ` - ` + row.Index + `</option>
             `);
         }
     });
@@ -97,7 +97,7 @@ function setNotification() {
     $updateFreq = $('#txtFrequency').val();
     $autoRenew = Number($('#chkAutoRenew').is(':checked'));
     let conn = db.conn;
-    $btnBeat = Number($('#MaterialTogglePurple').is(':checked'));
+    $btnBeat = Number($('#chkBeating').is(':checked'));
     if ($btnBeat == 0) {
         $beating = "down";
     } else {
