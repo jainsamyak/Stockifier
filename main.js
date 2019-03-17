@@ -1,7 +1,8 @@
 const { app, Tray, Menu, dialog, BrowserWindow } = require('electron')
 const path = require('path')
-let win
 
+let win
+let secondwin = 2;
 function createWindow() {
 
     win = new BrowserWindow({ width: 1200, height: 700 })
@@ -90,4 +91,3 @@ app.on('activate', () => {
         createWindow()
     }
 })
-

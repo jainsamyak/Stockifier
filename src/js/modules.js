@@ -4,6 +4,8 @@ const Chart = require('chart.js')
 const BrowserWindow = electron.remote.BrowserWindow
 const path = require('path')
 const currencySymbol = require('currency-symbol-map')
+const ipc = electron.ipcRenderer;
+const ipcMain = electron.ipcMain;
 
 if (window.localStorage.getItem("apiKey") != null) {
     window.stockapi = require('./js/stockapi');
@@ -56,7 +58,7 @@ function reloadWin() {
     electron.remote.getCurrentWindow().reload();
 }
 
-function showNotificationWindow() {
+function showNotificationWindow(ID) {
     let options = {
         width: 650,
         height: 600,
@@ -67,6 +69,15 @@ function showNotificationWindow() {
     notifWin.on('close', () => notifWin = null)
     notifWin.loadURL(notifWinPath)
     notifWin.show()
+    if (ID) {
+        notifWin.webContents.send('data-notify-id', ID);
+    }
+}
+
+function openNotifWin(element) {
+    let ID = $(element).attr('data-notify-id');
+    showNotificationWindow(ID);
+
 }
 
 function showAnalyzeWindow() {
@@ -531,7 +542,7 @@ $(document).ready(function () {
                                         <span id="stockTitle">`+ row.StockName + `</span>
                                     </div>
                                     <div class="p-2 d-flex justify-content-around">
-                                        <button class="mdc-fab mdc-fab--mini mdc-fab--extended notify" data-notify-id=`+ row.ID + `>
+                                        <button class="mdc-fab mdc-fab--mini mdc-fab--extended notify" data-notify-id=`+ row.ID + ` onclick='openNotifWin(this)'>
                                             <span class="mdc-fab__icon material-icons">notifications_active</span>
                                             <span class="mdc-fab__label">Notify</span>
                                         </button>
