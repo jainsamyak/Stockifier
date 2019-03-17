@@ -59,7 +59,8 @@ function reloadWin() {
 function showNotificationWindow() {
     let options = {
         width: 650,
-        height: 600
+        height: 600,
+        alwaysOnTop: true
     };
     let notifWinPath = path.join("file://", __dirname, "/notify.html")
     let notifWin = new BrowserWindow(options)
@@ -71,7 +72,8 @@ function showNotificationWindow() {
 function showAnalyzeWindow() {
     let options = {
         width: 900,
-        height: 600
+        height: 600,
+        alwaysOnTop: true
     };
     let analyzeWinPath = path.join("file://", __dirname, "/analyze.html")
     let analyzeWin = new BrowserWindow(options)
@@ -241,13 +243,12 @@ function loadSpotlight(element, stockID) {
         let i = 0
         for (const key of keys) {
             if (i % 5 == 0) {
-                dates.push(String(keys[i]).split(' ')[1].split(':'));
+                dates.push(keys[i]);
                 time_series_points.push(Number(data[key]['4. close']));
                 volumes.push(Number(data[key]['5. volume']));
             }
             i += 1;
         }
-        dates = dates.map((el) => el[0] + ":" + el[1]);
 
 
         /* Dynamic updation of chart */
@@ -295,7 +296,8 @@ var myChart = new Chart(ctx, {
             xAxes: [{
                 gridLines: {
                     display: false
-                }
+                },
+                type: 'time'
             }],
             yAxes: [{
                 type: 'linear',

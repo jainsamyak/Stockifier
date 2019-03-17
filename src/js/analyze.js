@@ -115,6 +115,87 @@ var priceChart = new Chart(ctx, {
     }
 });
 
+
+
+function updateIndicatorChart(element) {
+    $indicator = $(element).val();
+    let stockID = $('#stocksList').val();
+    let conn = db.conn;
+    conn.get('SELECT * FROM Stocks WHERE "Index"=?', stockID, (err, row) => {
+        indicatorChart.options.title.text = row.StockName;
+    });
+
+    stockapi.getStockIndicator(stockID, $indicator, (data) => {
+        indicator = data[0];
+        dates = data[1];
+
+        merged_t = [];
+        for (let index = 0; index < dates.length; index++) {
+            merged_t.push({ x: dates[index], y: indicator[index] });
+        }
+        console.log($indicator);
+        if ($indicator == "RSI") {
+            indicatorChart.options.scales.yAxes[0].beginAtZero = true;
+            indicatorChart.options.scales.yAxes[0].max = 100;
+        }
+        indicatorChart.data.datasets[0].label = "Stock Indicator - " + $indicator;
+        indicatorChart.data.datasets[0].data = merged_t;
+        indicatorChart.update();
+    });
+
+}
+/* Indicator Chart */
+
+var ctx = $('#indicatorChart')
+var indicatorChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        datasets: [{
+            type: 'line',
+            label: 'Stock Indicator',
+            fill: false,
+            data: [],
+            borderWidth: 2,
+            borderColor: 'rgba(196, 22, 98,1)',
+            backgroundColor: 'rgba(196, 22, 98,1)',
+            pointRadius: 3,
+        }]
+    },
+    options: {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Select a Stock and Indicator to view characterstics'
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                gridLines: {
+                    display: false
+                },
+                distribution: 'series',
+                type: 'time'
+            }],
+            yAxes: [{
+                type: 'linear',
+                gridLines: {
+                    display: false
+                }
+            }]
+        }
+    }
+});
+
+
+
+
+function updateSelected(element) {
+    $current = $('.selectedInterval');
+    $current.removeClass('selectedInterval')
+    $(element).addClass('selectedInterval');
+}
+
+
 $(document).ready(function () {
 
     getStocks();
@@ -134,4 +215,8 @@ for (const button of buttons) {
     mdc.ripple.MDCRipple.attachTo(button);
 }
 
-mdc.select.MDCSelect.attachTo(document.querySelector('.mdc-select'));
+
+const select = document.querySelectorAll('.mdc-select');
+for (const s of select) {
+    mdc.select.MDCSelect.attachTo(s);
+}

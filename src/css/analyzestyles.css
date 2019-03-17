@@ -22,7 +22,7 @@ button:focus{
     background-color: var(--primary-color) !important;
     color: white !important;
 }
-.btn-time-range:focus{
+.selectedInterval{
     background-color: var(--primary-color) !important;
     color: white !important;
     box-shadow: 0px 2px 0.2rem rgba(62, 18, 148,0.5) !important;

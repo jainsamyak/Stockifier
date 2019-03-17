@@ -23,7 +23,8 @@
         <div class="form-group">
             <div class="mdc-select w-100">
                 <i class="mdc-select__dropdown-icon"></i>
-                <select class="mdc-select__native-control" id="stocksList" onchange="updatePriceChart('min')" required>
+                <select class="mdc-select__native-control" id="stocksList"
+                    onchange="updatePriceChart('min');updateSelected($('#btnSelectMin'))" required>
                     <option value="" disabled selected></option>
                 </select>
                 <label class="mdc-floating-label">Select Stock</label>
@@ -32,7 +33,7 @@
         </div>
 
         <nav>
-            <div class="nav nav-pills nav-justified" id="nav-tab" role="tablist">
+            <div class="nav nav-pills nav-justified nav-fill" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-price" role="tab"
                     aria-selected="true">Stock Price</a>
                 <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-indicators" role="tab"
@@ -42,22 +43,44 @@
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-price" role="tabpanel">
                 <div class="btn-group btn-group-sm mt-2 d-flex" role="group" aria-label="...">
-                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('min')">Min</button>
-                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('week')">1 week</button>
-                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('month')">1
+                    <button type="button" class="btn btn-time-range"
+                        onclick="updatePriceChart('min');updateSelected(this)" id="btnSelectMin">Min</button>
+                    <button type="button" class="btn btn-time-range"
+                        onclick="updatePriceChart('week');updateSelected(this)">1 week</button>
+                    <button type="button" class="btn btn-time-range"
+                        onclick="updatePriceChart('month');updateSelected(this)">1
                         month</button>
-                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('6months')">6
+                    <button type="button" class="btn btn-time-range"
+                        onclick="updatePriceChart('6months');updateSelected(this)">6
                         months</button>
-                    <button type="button" class="btn btn-time-range" onclick="updatePriceChart('max')">Max</button>
+                    <button type="button" class="btn btn-time-range"
+                        onclick="updatePriceChart('max');updateSelected(this)">Max</button>
                 </div>
                 <canvas id="priceChart">
 
                 </canvas>
 
+            </div>
+            <div class="tab-pane fade" id="nav-indicators" role="tabpanel">
+                <div class="form-group">
+                    <div class="mdc-select w-100">
+                        <i class="mdc-select__dropdown-icon"></i>
+                        <select class="mdc-select__native-control" id="indicatorsList"
+                            onchange="updateIndicatorChart(this)" required>
+                            <option value="" disabled selected></option>
+                            <option value="EMA">EMA - Exponential Moving Average</option>
+                            <option value="RSI">RSI - Relative Strength Index</option>
+                            <option value="SMA">SMA - Simple Moving Average/option>
+                        </select>
+                        <label class="mdc-floating-label">Select Indicator</label>
+                        <div class="mdc-line-ripple"></div>
+                    </div>
+                </div>
+                <canvas id="indicatorChart">
 
+                </canvas>
 
             </div>
-            <div class="tab-pane fade" id="nav-indicators" role="tabpanel">...</div>
         </div>
 
 

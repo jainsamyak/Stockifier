@@ -144,11 +144,61 @@ function getStockPrices(stockID, interval, callback) {
 
 }
 
+function getStockIndicator(stockID, indicator, callback) {
+    if (indicator == "EMA") {
+        alpha.technical.ema(stockID, 'weekly', 60, 'close').then(data => {
+            data = data['Technical Analysis: EMA'];
+            keys = Object.keys(data);
+            let i = 0;
+            dates = [];
+            prices = [];
+            while (i <= 50) {
+                dates.push(keys[i]);
+                prices.push(data[keys[i]]['EMA']);
+                i += 1;
+            }
+            callback([prices, dates]);
+            return;
+        })
+    } else if (indicator == "RSI") {
+        alpha.technical.rsi(stockID, 'weekly', 60, 'close').then(data => {
+            data = data['Technical Analysis: RSI'];
+            keys = Object.keys(data);
+            let i = 0;
+            dates = [];
+            prices = [];
+            while (i <= 50) {
+                dates.push(keys[i]);
+                prices.push(data[keys[i]]['RSI']);
+                i += 1;
+            }
+            callback([prices, dates]);
+            return;
+        })
+    } else if (indicator == "SMA") {
+        alpha.technical.sma(stockID, 'weekly', 60, 'close').then(data => {
+            data = data['Technical Analysis: SMA'];
+            keys = Object.keys(data);
+            let i = 0;
+            dates = [];
+            prices = [];
+            while (i <= 50) {
+                dates.push(keys[i]);
+                prices.push(data[keys[i]]['SMA']);
+                i += 1;
+            }
+            callback([prices, dates]);
+            return;
+        })
+    }
+}
+
 module.exports = {
     searchStock: searchStock,
     alphavantage: alpha,
     getStockQuote: getStockQuote,
     getStockData: getStockData,
     getStockUpdates: getStockUpdates,
-    getStockPrices: getStockPrices
+    getStockPrices: getStockPrices,
+    getStockIndicator: getStockIndicator
 }
