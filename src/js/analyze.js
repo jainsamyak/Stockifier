@@ -200,6 +200,7 @@ $(document).ready(function () {
 
     getStocks();
 
+
 });
 
 const textfields = document.querySelectorAll('.mdc-text-field');

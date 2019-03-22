@@ -29,13 +29,15 @@ function getStocks() {
     });
 }
 
-function updatePredictChart($this) {
 
-    $stock = $($this).val();
+function updatePredictChart() {
+
+    $stock = $('#stocksList').val();
     let conn = db.conn;
     conn.get('SELECT * FROM Stocks WHERE "Index"=?', $stock, (err, row) => {
         predictChart.options.title.text = row.StockName;
     });
+    openSnackbar("Fetching Stock data");
 
     stockapi.getStockHistoricalDaily($stock, (data) => {
 
@@ -64,53 +66,73 @@ function updatePredictChart($this) {
         /* model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1], returnSequences: true }));
     model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] })); */
         model.add(tf.layers.dense({ units: 1, activation: 'linear' }));
-        const lr = 0.01;
+        $lr = parseFloat($('#txtLearningRate').val());
+        const lr = $lr;
         const opt = tf.train.adam(lr);
         const loss = 'meanSquaredError';
+        openSnackbar("Compiling model");
         model.compile({ optimizer: opt, loss: loss, metrics: ['accuracy'] });
-
 
         async function fit() {
             t = targets.map((el) => minMaxInverseScaler(el, min, max));
             t = t.slice(t.length - 100, t.length);
             predictChart.data.labels = dates.slice(dates.length - 100, dates.length);
 
-            const resp = await model.fit(tfPrices, tfTargets, {
-                epochs: 10,
-                callbacks: {
-                    onEpochEnd: (epoch, log) => {
-                        console.log(`Epoch ${epoch}: loss = ${log.loss}`)
-                        pred = model.predict(tfPrices);
-                        pred.data().then(d => {
-                            ds = d.map((el) => minMaxInverseScaler(el, min, max));
-                            ds = ds.slice(d.length - 100, d.length);
-                            //console.log(ds);
-                            predictChart.data.datasets[0].data = t;
-                            predictChart.data.datasets[1].data = ds;
-                            //predictChart.data.labels = Array(50);
-                            predictChart.update();
+            var loss = Infinity;
+            var epochs = 1;
+            var targetLoss = 0.0007;
+            while (loss > targetLoss) {
 
-                        });
-                    }
-                },
-                shuffle: true
-            });
+
+                const resp = await model.fit(tfPrices, tfTargets, {
+                    epochs: 1,
+                    callbacks: {
+                        onEpochEnd: (epoch, log) => {
+                            epochs += 1;
+                            loss = log.loss;
+                            console.log(`Epoch ${epochs}: loss = ${log.loss}`)
+                            pred = model.predict(tfPrices);
+                            pred.data().then(d => {
+                                ds = d.map((el) => minMaxInverseScaler(el, min, max));
+                                ds = ds.slice(d.length - 100, d.length);
+                                //console.log(ds);
+                                predictChart.data.datasets[0].data = t;
+                                predictChart.data.datasets[1].data = ds;
+                                //predictChart.data.labels = Array(50);
+                                predictChart.update();
+                                openSnackbar(`Training model - Epoch ${epochs}: loss = ${log.loss} `);
+                            });
+                        }
+                    },
+                    shuffle: true
+                });
+            }
 
 
         }
         fit().then(() => {
+
             stockapi.getDataForPrediction($stock, (data) => {
-                prices = data[0];
-                dates = data[1];
-                finalValues = prices;
+                var prices = data[0];
+                prices = prices.slice(0, prices.length);
+                var lastPrice = prices[prices.length - 1];
+                var dates = data[1];
                 tfTest = tf.tensor3d(prices.map((el) => minMaxScaler(el, min, max)), [1, prices.length, 1]);
                 tfPred = model.predict(tfTest);
+
                 console.log("Final Prediction: ");
                 tfPred.data().then(d => {
-                    console.log(d.map((el) => minMaxInverseScaler(el, min, max)));
-                    finalValues.push(d.map((el) => minMaxInverseScaler(el, min, max)));
+                    console.log("Done prediction");
+                    var forecastPrice = d.map((el) => minMaxInverseScaler(el, min, max))[0];
+                    openSnackbar("Training Complete - Forecasted Price: " + forecastPrice);
+                    console.log(forecastPrice, lastPrice);
+                    if (forecastPrice > lastPrice) {
+                        alert("Forcasted Bearish tarjectory");
+                    } else {
+                        alert("Forcasted Bullish tarjectory");
+                    }
                 });
-                //predictChart.data.datasets[2].data = finalValues;
+
             });
         });
     });
@@ -134,12 +156,6 @@ var predictChart = new Chart(ctx, {
             data: [],
             borderColor: 'green',
             pointRadius: 0
-        }, {
-            type: 'line',
-            label: 'Forecast',
-            fill: false,
-            data: [],
-            borderColor: 'blue'
         }]
     },
     options: {
@@ -173,14 +189,43 @@ var predictChart = new Chart(ctx, {
 
 
 
+const sb = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
+function openSnackbar(snackbarMsg) {
+    $snackbar = $("#snackbar-msg");
+    $snackbar.text(snackbarMsg);
+    //sb.close();
+    sb.open();
+}
 
 
 $(document).ready(function () {
     getStocks();
+    window.startStop = 1;
+    $('#startStopTraining').on('click', () => {
+
+        if (window.startStop == 1) {
+            $('#startStopTraining').html("Stop training");
+            updatePredictChart();
+            window.startStop = 0;
+        } else {
+            $('#startStopTraining').html("Start Training");
+
+        }
+    })
 });
 
 
 const select = document.querySelectorAll('.mdc-select');
 for (const s of select) {
     mdc.select.MDCSelect.attachTo(s);
+}
+
+const textfields = document.querySelectorAll('.mdc-text-field');
+for (const tf of textfields) {
+    mdc.textField.MDCTextField.attachTo(tf);
+}
+
+const buttons = document.querySelectorAll('button');
+for (const button of buttons) {
+    mdc.ripple.MDCRipple.attachTo(button);
 }
