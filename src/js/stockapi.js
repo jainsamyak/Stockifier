@@ -217,6 +217,27 @@ function getStockHistoricalDaily(stockID, callback) {
 
 }
 
+function getDataForPrediction(stockID, callback) {
+
+    alpha.data.daily_adjusted(stockID, 'compact', 'json').then(data => {
+        data = data['Time Series (Daily)'];
+        let keys = Object.keys(data);
+        keys = keys.reverse()
+        let dates = [];
+        let prices = [];
+        let i = 0
+        while (i < 10) {
+            dates.push(keys[keys.length - 1 - i]);
+            prices.push(Number(data[keys[keys.length - 1 - i]]['5. adjusted close']));
+            i += 1;
+        }
+
+        callback([prices.reverse(), dates.reverse()]);
+    });
+
+}
+
+
 module.exports = {
     searchStock: searchStock,
     alphavantage: alpha,
@@ -225,5 +246,6 @@ module.exports = {
     getStockUpdates: getStockUpdates,
     getStockPrices: getStockPrices,
     getStockIndicator: getStockIndicator,
-    getStockHistoricalDaily: getStockHistoricalDaily
+    getStockHistoricalDaily: getStockHistoricalDaily,
+    getDataForPrediction: getDataForPrediction
 }

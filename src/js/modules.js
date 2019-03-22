@@ -93,6 +93,21 @@ function showAnalyzeWindow() {
     analyzeWin.show()
 }
 
+
+function showPredictWindow() {
+    let options = {
+        width: 900,
+        height: 600,
+        //alwaysOnTop: true
+    };
+    let predictWinPath = path.join("file://", __dirname, "/predict.html")
+    let predictWin = new BrowserWindow(options)
+    predictWin.on('close', () => predictWin = null)
+    predictWin.loadURL(predictWinPath)
+    predictWin.show()
+
+}
+
 function checkTarget(symbol, targetVal, direction, callback) {
     stockapi.getStockQuote(symbol, (currVal) => {
         if (direction == "up") {
