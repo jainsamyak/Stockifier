@@ -1,0 +1,21 @@
+:root {
+    --primary-color: #4522a8;
+    --primary-light: #ece8f4;
+    --primary-dark: rgb(62, 18, 148);
+    --warning-color:#ffc400;
+    --warning-dark:#c17900;
+    --danger-color:#d32f2f;
+    --danger-dark:#b0151c;
+    --danger-light:#ff6659;
+}
+
+button:focus{
+    text-decoration: none;
+    outline: none !important;
+}
+.stopTraining{
+    background-image: linear-gradient(to right,#d32f2f,#9a0007) !important;
+}
+.startTraining{
+    background-image: linear-gradient(to right,#6649b5,#41258e) !important;
+}

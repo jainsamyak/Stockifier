@@ -142,25 +142,7 @@ function setNotification() {
 }
 
 $(document).ready(function () {
-
-    if (typeof (window.sessionStorage['notify-ID']) != "undefined") {
-        let ID = window.sessionStorage['notify-ID'];
-        $stocks = $('#stocksList');
-        let conn = db.conn;
-        conn.get('SELECT ID,"Index",StockName FROM Stocks WHERE ID=?', ID, (err, row) => {
-            if (err) {
-                console.log(err);
-            } else {
-                $stocks.html(`
-                <option value="`+ row['Index'] + `">` + row.StockName + ` - ` + row.Index + `</option>
-            `);
-            }
-            select.selectedIndex = 0;
-            getCurrentVal()
-        })
-    } else {
-        getStocks();
-    }
+    getStocks();
 
     $('#closeWindow').on('click', () => {
         remote.getCurrentWindow().close();
@@ -182,5 +164,17 @@ for (const button of buttons) {
 var select = mdc.select.MDCSelect.attachTo(document.querySelector('.mdc-select'));
 ipc.on('data-notify-id', function (event, arg) {
     let ID = Number(arg);
-    window.sessionStorage['notify-ID'] = ID;
+    $stocks = $('#stocksList');
+    let conn = db.conn;
+    conn.get('SELECT ID,"Index",StockName FROM Stocks WHERE ID=?', ID, (err, row) => {
+        if (err) {
+            console.log(err);
+        } else {
+            $stocks.html(`
+                <option value="`+ row['Index'] + `">` + row.StockName + ` - ` + row.Index + `</option>
+            `);
+        }
+        select.selectedIndex = 0;
+        getCurrentVal()
+    })
 });

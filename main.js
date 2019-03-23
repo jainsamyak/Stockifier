@@ -70,9 +70,13 @@ function createWindow() {
         )
         if (choice === 1) {
             event.preventDefault()
-            win.hide()
+            //win.hide()
+            app.hide()
         } else {
-            win = null
+            win.on('closed', () => {
+                win = null;
+                app.quit();
+            })
         }
 
     })

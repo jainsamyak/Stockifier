@@ -36,6 +36,8 @@ function updatePredictChart() {
     let conn = db.conn;
     conn.get('SELECT * FROM Stocks WHERE "Index"=?', $stock, (err, row) => {
         predictChart.options.title.text = row.StockName;
+        predictChart.options.scales.yAxes[0].scaleLabel.labelString = `Stock Price (${currencySymbol(row.Currency)})`;
+        predictChart.update();
     });
     openSnackbar("Fetching Stock data");
 
@@ -63,8 +65,8 @@ function updatePredictChart() {
 
         const model = tf.sequential();
         model.add(tf.layers.lstm({ units: 64, inputShape: [10, 1] }));
-        /* model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1], returnSequences: true }));
-    model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] })); */
+        /*         model.add(tf.layers.lstm({ units: 100, inputShape: [10, 1] }));
+         */        /* model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] })); */
         model.add(tf.layers.dense({ units: 1, activation: 'linear' }));
         $lr = parseFloat($('#txtLearningRate').val());
         const lr = $lr;
@@ -80,8 +82,8 @@ function updatePredictChart() {
 
             var loss = Infinity;
             var epochs = 1;
-            var targetLoss = 0.0007;
-            while (loss > targetLoss) {
+            var targetLoss = parseFloat($('#txtTargetLoss').val());
+            while (loss > targetLoss && window.startStop == 1) {
 
 
                 const resp = await model.fit(tfPrices, tfTargets, {
@@ -90,7 +92,7 @@ function updatePredictChart() {
                         onEpochEnd: (epoch, log) => {
                             epochs += 1;
                             loss = log.loss;
-                            console.log(`Epoch ${epochs}: loss = ${log.loss}`)
+                            console.log(log);
                             pred = model.predict(tfPrices);
                             pred.data().then(d => {
                                 ds = d.map((el) => minMaxInverseScaler(el, min, max));
@@ -127,9 +129,9 @@ function updatePredictChart() {
                     openSnackbar("Training Complete - Forecasted Price: " + forecastPrice);
                     console.log(forecastPrice, lastPrice);
                     if (forecastPrice > lastPrice) {
-                        alert("Forcasted Bearish tarjectory");
+                        alert("Forcasted Bullish trajectory - Target Price: " + forecastPrice);
                     } else {
-                        alert("Forcasted Bullish tarjectory");
+                        alert("Forcasted Bearish trajectory - Target Price: " + forecastPrice);
                     }
                 });
 
@@ -171,12 +173,20 @@ var predictChart = new Chart(ctx, {
                     display: false
                 },
                 distribution: 'series',
-                type: 'time'
+                type: 'time',
+                scaleLabel: {
+                    display: true,
+                    labelString: "Time"
+                }
             }],
             yAxes: [{
                 type: 'linear',
                 gridLines: {
                     display: false
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Stock Price"
                 }
             }]
         }
@@ -200,17 +210,28 @@ function openSnackbar(snackbarMsg) {
 
 $(document).ready(function () {
     getStocks();
-    window.startStop = 1;
+    window.startStop = 0;
     $('#startStopTraining').on('click', () => {
-
-        if (window.startStop == 1) {
-            $('#startStopTraining').html("Stop training");
+        btn = $('#startStopTraining');
+        if (window.startStop == 0 && $('#stocksList').val() != null) {
+            btn.removeClass('startTraining');
+            btn.addClass('stopTraining');
+            btn.html('Stop Training');
+            window.startStop = 1;
             updatePredictChart();
+        }
+        else if (window.startStop == 1) {
             window.startStop = 0;
-        } else {
+            btn.removeClass('stopTraining');
+            btn.addClass('startTraining');
             $('#startStopTraining').html("Start Training");
+            openSnackbar("Training Stopped");
 
         }
+        else {
+            openSnackbar("Please check all fields!");
+        }
+        console.log(window.startStop);
     })
 });
 

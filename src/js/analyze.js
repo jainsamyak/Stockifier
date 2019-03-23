@@ -26,6 +26,8 @@ function updatePriceChart(interval) {
     let conn = db.conn;
     conn.get('SELECT * FROM Stocks WHERE "Index"=?', stockID, (err, row) => {
         priceChart.options.title.text = row.StockName;
+        priceChart.options.scales.yAxes[0].scaleLabel.labelString = `Stock Price (${currencySymbol(row.Currency)})`;
+        priceChart.update();
     });
 
     stockapi.getStockPrices(stockID, interval, (data) => {
@@ -94,7 +96,11 @@ var priceChart = new Chart(ctx, {
                     display: false
                 },
                 distribution: 'series',
-                type: 'time'
+                type: 'time',
+                scaleLabel: {
+                    display: true,
+                    labelString: "Time"
+                }
             }],
             yAxes: [{
                 type: 'linear',
@@ -102,6 +108,10 @@ var priceChart = new Chart(ctx, {
                 id: 'price',
                 gridLines: {
                     display: false
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Stock Price"
                 }
             }, {
                 type: 'linear',

@@ -118,7 +118,9 @@ button:focus{
     overflow-y: scroll;
 }
 
-
+#myStocks li:hover{
+    cursor: pointer;
+}
 /* typeahead styles */
 .twitter-typeahead{
     width: 100% !important;
