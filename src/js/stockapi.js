@@ -21,6 +21,11 @@ function getStockQuote(stockID, callback) {
         callback(data['Global Quote']['05. price'])
     });
 }
+function getPreviousStockClose(stockID, callback) {
+    alpha.data.quote(stockID).then(data => {
+        callback(data['Global Quote']['08. previous close'])
+    });
+}
 function getStockUpdates(stockID, callback) {
     alpha.data.quote(stockID).then(data => {
         callback(data)
@@ -28,9 +33,26 @@ function getStockUpdates(stockID, callback) {
 }
 
 function getStockData(stockID, callback) {
-    alpha.data.intraday(stockID, 'compact', 'json', '1min').then(data => {
-        data = data['Time Series (1min)'];
-        callback(data);
+    alpha.data.intraday(stockID, 'compact', 'json', '5min').then(data => {
+        data = data['Time Series (5min)'];
+        let keys = Object.keys(data);
+        let dates = [];
+        let prices = [];
+        let volumes = [];
+        let today = keys[0].split(' ')[0];
+        let i = 0
+        for (const key of keys) {
+            if (keys[i].split(' ')[0] != today) {
+                break;
+            }
+            dates.push(keys[i]);
+            prices.push(Number(data[key]['4. close']));
+            volumes.push(Number(data[key]['5. volume']));
+            i += 1;
+        }
+        console.log(dates.length);
+        callback([dates.reverse(), prices.reverse(), volumes.reverse()])
+
     });
 }
 
@@ -237,11 +259,11 @@ function getDataForPrediction(stockID, callback) {
 
 }
 
-
 module.exports = {
     searchStock: searchStock,
     alphavantage: alpha,
     getStockQuote: getStockQuote,
+    getPreviousStockClose: getPreviousStockClose,
     getStockData: getStockData,
     getStockUpdates: getStockUpdates,
     getStockPrices: getStockPrices,

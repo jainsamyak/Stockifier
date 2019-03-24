@@ -54,9 +54,6 @@ function sendNotification(title, body) {
         });
     })
 }
-setTimeout(() => {
-    sendNotification('hello', 'hello');
-}, 5000);
 function reloadWin() {
     electron.remote.getCurrentWindow().reload();
 }
@@ -277,33 +274,45 @@ function loadSpotlight(element, stockID) {
     let conn = db.conn;
     conn.get('SELECT * FROM Stocks WHERE "Index"=?', stockID, (err, row) => {
         myChart.options.title.text = row.StockName;
+        myChart.options.scales.yAxes[0].scaleLabel.labelString = `Stock Price (${currencySymbol(row.Currency)})`;
     });
     stockapi.getStockData(stockID, (data) => {
 
 
-        let keys = Object.keys(data);
-        keys = keys.reverse()
-        let dates = [];
-        let time_series_points = [];
-        let volumes = [];
-        let i = 0
-        for (const key of keys) {
-            if (i % 5 == 0) {
-                dates.push(keys[i]);
-                time_series_points.push(Number(data[key]['4. close']));
-                volumes.push(Number(data[key]['5. volume']));
-            }
-            i += 1;
-        }
-
+        let dates = data[0];
+        let time_series_points = data[1];
+        let volumes = data[2];
 
         /* Dynamic updation of chart */
         myChart.data.labels = dates;
         myChart.data.datasets[0].data = time_series_points;
         myChart.data.datasets[1].data = volumes;
-        myChart.update();
+        myChart.options.scales.xAxes[0].scaleLabel.labelString = `Time (${dates[0].split(' ')[0]})`;
+
+        var latestPrice = time_series_points[time_series_points.length - 1];
+        stockapi.getPreviousStockClose(stockID, (data) => {
+            prevClose = Array(dates.length);
+            prevClose.fill(Number(data));
+            console.log(prevClose);
+            /*myChart.data.datasets[0].fill = true;
+            if (latestPrice > prevClose[0]) {
+                myChart.data.datasets[0].borderColor = "rgba(34, 136, 14,1)";
+                myChart.data.datasets[0].backgroundColor = "rgba(128, 214, 111 ,0.4)";
+                myChart.data.datasets[1].backgroundColor = "rgba(20, 80, 8 ,0.8)";
+
+            }
+            else {
+                myChart.data.datasets[0].borderColor = "rgba(222, 16, 16,1)";
+                myChart.data.datasets[0].backgroundColor = "rgba(222, 16, 16,0.4)";
+                myChart.data.datasets[1].backgroundColor = "rgba(106, 21, 11,0.8)";
+            }
+ */
+            myChart.data.datasets[2].data = prevClose;
+            myChart.update();
+        });
 
     });
+
 }
 
 /* Initialize Spotlight chart */
@@ -315,20 +324,30 @@ var myChart = new Chart(ctx, {
         datasets: [{
             type: 'line',
             label: 'Stock Price',
-            fill: false,
             data: [],
+            fill: false,
             borderWidth: 2,
             borderColor: 'rgba(196, 22, 98,1)',
             backgroundColor: 'rgba(196, 22, 98,1)',
-            pointRadius: 3,
+            pointRadius: 1,
             yAxisID: 'price'
         }, {
             type: 'bar',
             label: 'Volume',
             fill: false,
             data: [],
-            backgroundColor: 'rgba(190, 135, 211,0.4)',
+            backgroundColor: 'rgba(190, 135, 211,0.8)',
             yAxisID: 'volume'
+        }, {
+            type: 'line',
+            label: 'Previous Close',
+            fill: false,
+            data: [],
+            borderColor: 'rgb(53, 16, 84)',
+            backgroundColor: 'rgba(53, 16, 84,0.2)',
+            borderDash: [10, 8],
+            pointRadius: 0,
+            borderWidth: 1
         }]
     },
     options: {
@@ -342,7 +361,11 @@ var myChart = new Chart(ctx, {
                 gridLines: {
                     display: false
                 },
-                type: 'time'
+                type: 'time',
+                scaleLabel: {
+                    display: true,
+                    labelString: "Time"
+                }
             }],
             yAxes: [{
                 type: 'linear',
@@ -350,6 +373,10 @@ var myChart = new Chart(ctx, {
                 id: 'price',
                 gridLines: {
                     display: false
+                },
+                scaleLabel: {
+                    display: true,
+                    labelString: "Stock Price"
                 }
             }, {
                 type: 'linear',
@@ -608,7 +635,7 @@ $(document).ready(function () {
     updateStocks();
     initializeStockView();
     loadNotifications(true);
-    initalizeAlerts();
+    //initalizeAlerts();
 
     $("#txtStockSearch").on("keyup", function () {
         var value = $(this).val().toLowerCase();
