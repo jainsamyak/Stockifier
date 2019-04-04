@@ -232,7 +232,7 @@ function getStockHistoricalDaily(stockID, callback) {
             prices.push(Number(data[keys[keys.length - 1 - i]]['5. adjusted close']));
             i += 1;
         }
-
+        console.log(keys.length);
         callback([prices.reverse(), dates.reverse()]);
     });
 

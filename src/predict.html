@@ -30,34 +30,42 @@
             </div>
         </div>
         <div class="form-group">
-            <div class="form-inline d-flex justify-content-center">
+            <div class="form-inline d-flex justify-content-around">
 
-                <div class="mdc-text-field mdc-text-field--outlined mr-2">
-                    <input type="number" required id="txtTargetLoss" class="mdc-text-field__input" value="0.0007"
-                        step="0.0001" min="0.00001" max="1">
-                    <div class="mdc-notched-outline">
-                        <div class="mdc-notched-outline__leading"></div>
-                        <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">Target Loss</label>
+                <div>
+                    <div class="mdc-text-field mdc-text-field--outlined mr-2">
+                        <input type="number" required id="txtTargetLoss" class="mdc-text-field__input" value="0.0007"
+                            step="0.0001" min="0.00001" max="1">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                                <label for="tf-outlined" class="mdc-floating-label">Target Loss</label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
                         </div>
-                        <div class="mdc-notched-outline__trailing"></div>
+                    </div>
+                    <div class="mdc-text-field mdc-text-field--outlined mr-2">
+                        <input type="number" required id="txtLearningRate" class="mdc-text-field__input" value="0.005"
+                            step="0.001" min="0.0001" max="1">
+                        <div class="mdc-notched-outline">
+                            <div class="mdc-notched-outline__leading"></div>
+                            <div class="mdc-notched-outline__notch">
+                                <label for="tf-outlined" class="mdc-floating-label">Learning Rate</label>
+                            </div>
+                            <div class="mdc-notched-outline__trailing"></div>
+                        </div>
+                    </div>
+
+                    <button id="startStopTraining" type="button"
+                        class="mdc mdc-button mdc-button--raised mb-2 startTraining">Start
+                        Training</button>
+                </div>
+                <div class="forecast">
+
+                    <div id="forecast-price">
+                        Forecast Price: $0
                     </div>
                 </div>
-                <div class="mdc-text-field mdc-text-field--outlined mr-2">
-                    <input type="number" required id="txtLearningRate" class="mdc-text-field__input" value="0.005"
-                        step="0.001" min="0.0001" max="1">
-                    <div class="mdc-notched-outline">
-                        <div class="mdc-notched-outline__leading"></div>
-                        <div class="mdc-notched-outline__notch">
-                            <label for="tf-outlined" class="mdc-floating-label">Learning Rate</label>
-                        </div>
-                        <div class="mdc-notched-outline__trailing"></div>
-                    </div>
-                </div>
-
-                <button id="startStopTraining" type="button"
-                    class="mdc mdc-button mdc-button--raised mb-2 startTraining">Start
-                    Training</button>
             </div>
         </div>
 

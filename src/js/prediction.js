@@ -65,15 +65,15 @@ function updatePredictChart() {
 
         const model = tf.sequential();
         model.add(tf.layers.lstm({ units: 64, inputShape: [10, 1] }));
-        /*         model.add(tf.layers.lstm({ units: 100, inputShape: [10, 1] }));
-         */        /* model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] })); */
+        /* model.add(tf.layers.lstm({ units: 64, inputShape: [10, 1] })); */
+        /* model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] })); */
         model.add(tf.layers.dense({ units: 1, activation: 'linear' }));
         $lr = parseFloat($('#txtLearningRate').val());
         const lr = $lr;
         const opt = tf.train.adam(lr);
         const loss = 'meanSquaredError';
         openSnackbar("Compiling model");
-        model.compile({ optimizer: opt, loss: loss, metrics: ['accuracy'] });
+        model.compile({ optimizer: opt, loss: loss, metrics: ['mae'] }); /* Using Mean Absolute Error as metrics for accuracy of model */
 
         async function fit() {
             t = targets.map((el) => minMaxInverseScaler(el, min, max));
@@ -92,7 +92,6 @@ function updatePredictChart() {
                         onEpochEnd: (epoch, log) => {
                             epochs += 1;
                             loss = log.loss;
-                            console.log(log);
                             pred = model.predict(tfPrices);
                             pred.data().then(d => {
                                 ds = d.map((el) => minMaxInverseScaler(el, min, max));
@@ -102,6 +101,7 @@ function updatePredictChart() {
                                 predictChart.data.datasets[1].data = ds;
                                 //predictChart.data.labels = Array(50);
                                 predictChart.update();
+
                                 openSnackbar(`Training model - Epoch ${epochs}: loss = ${log.loss} `);
                             });
                         }
@@ -113,6 +113,11 @@ function updatePredictChart() {
 
         }
         fit().then(() => {
+            window.startStop = 0;
+            btn.removeClass('stopTraining');
+            btn.addClass('startTraining');
+            $('#startStopTraining').html("Start Training");
+
 
             stockapi.getDataForPrediction($stock, (data) => {
                 var prices = data[0];
@@ -126,12 +131,17 @@ function updatePredictChart() {
                 tfPred.data().then(d => {
                     console.log("Done prediction");
                     var forecastPrice = d.map((el) => minMaxInverseScaler(el, min, max))[0];
+                    $('.forecast').css('display', 'block');
                     openSnackbar("Training Complete - Forecasted Price: " + forecastPrice);
                     console.log(forecastPrice, lastPrice);
                     if (forecastPrice > lastPrice) {
                         alert("Forcasted Bullish trajectory - Target Price: " + forecastPrice);
+                        $('#forecast-price').html(`Forecasted Price: ${forecastPrice} (Bullish)`);
+
                     } else {
                         alert("Forcasted Bearish trajectory - Target Price: " + forecastPrice);
+                        $('#forecast-price').html(`Forecasted Price: ${forecastPrice} (Bearish)`);
+
                     }
                 });
 
