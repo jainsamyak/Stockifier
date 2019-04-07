@@ -89,6 +89,25 @@ button:focus{
     float: right;
 }
 
+#about{
+    color: white;
+    text-align: center;
+    font-size: 0.6rem;
+}
+#about hr{
+    color: white;
+    margin: 0;
+    border: none !important;
+}
+#about .hr{
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid white;
+    padding: 0;
+}
+#about div{
+    padding: 0.5rem;
+}
 .stockSelected{
     border-left: 7px solid #6d55ae !important;
     border-radius: 5px !important;

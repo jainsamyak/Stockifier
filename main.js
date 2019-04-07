@@ -5,17 +5,18 @@ let win
 let secondwin = 2;
 function createWindow() {
 
-    win = new BrowserWindow({ width: 1200, height: 700 })
+    win = new BrowserWindow({ width: 1200, height: 700, icon: path.join(__dirname, 'res', 'Stockifier.png') })
+    win.setMinimizable(false);
     let srcDir = "src/"
     win.loadFile(srcDir + 'index.html')
 
     win.webContents.openDevTools()
 
     /* App Tray */
-    tray = new Tray(path.join(__dirname, 'res', 'stocks.png'))
+    tray = new Tray(path.join(__dirname, 'res', 'TrayIcon.png'))
     const contextMenu = Menu.buildFromTemplate([
         {
-            label: 'Stockifier',
+            label: 'Stockifier v1.0.0',
             enabled: false
         },
         {

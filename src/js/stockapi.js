@@ -1,5 +1,5 @@
-//const apiKey = window.localStorage.apiKey;
-const apiKey = '0M1OCUZTI229BTFV';
+const apiKey = window.localStorage.apiKey;
+//const apiKey = '0M1OCUZTI229BTFV';
 const alpha = require('alphavantage')({ key: apiKey })
 const https = require('https')
 
@@ -33,7 +33,10 @@ function getStockUpdates(stockID, callback) {
 }
 
 function getStockData(stockID, callback) {
+
+
     alpha.data.intraday(stockID, 'compact', 'json', '5min').then(data => {
+
         data = data['Time Series (5min)'];
         let keys = Object.keys(data);
         let dates = [];
@@ -242,6 +245,7 @@ function getStockHistoricalDaily(stockID, callback) {
 function getDataForPrediction(stockID, callback) {
 
     alpha.data.daily_adjusted(stockID, 'compact', 'json').then(data => {
+
         data = data['Time Series (Daily)'];
         let keys = Object.keys(data);
         keys = keys.reverse()
@@ -258,6 +262,7 @@ function getDataForPrediction(stockID, callback) {
     });
 
 }
+
 
 module.exports = {
     searchStock: searchStock,

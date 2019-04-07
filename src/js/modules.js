@@ -50,7 +50,8 @@ function deleteNotification(notifID) {
 function sendNotification(title, body) {
     Notification.requestPermission().then(() => {
         var myNotification = new Notification(title, {
-            body: body
+            body: body,
+            icon: '../res/Stockifier.png'
         });
     })
 }
