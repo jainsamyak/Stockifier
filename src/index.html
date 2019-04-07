@@ -8,7 +8,7 @@
     <title>Stockifier</title>
     <!-- CSS Imports -->
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="vendor/material-components-web.min.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Roboto" rel="stylesheet">
 
@@ -20,22 +20,20 @@
     <div class="d-flex" id="wrapper">
 
         <!-- Sidebar -->
-        <div class="bg-light border-right" id="sidebar-wrapper">
+        <div class="border-right" id="sidebar-wrapper">
 
             <div class="list-group list-group-flush">
-                <a href="#" onclick="showNotificationWindow()"
-                    class="list-group-item list-group-item-action bg-light">Notify
+                <a href="#" onclick="showNotificationWindow()" class="list-group-item list-group-item-action ">Notify
                     <i class="material-icons">
                         notifications_active
                     </i>
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-light"
-                    onclick="showAnalyzeWindow()">Analyse
+                <a href="#" class="list-group-item list-group-item-action" onclick="showAnalyzeWindow()">Analyse
                     <i class="material-icons">
                         timeline
                     </i>
                 </a>
-                <a href="#" class="list-group-item list-group-item-action bg-light" onclick="showPredictWindow()">
+                <a href="#" class="list-group-item list-group-item-action" onclick="showPredictWindow()">
                     Predict <i class="material-icons">
                         insert_chart
                     </i>
@@ -44,6 +42,7 @@
             </div>
         </div>
         <!-- Sidebar end -->
+
         <div id="page-content-wrapper">
 
             <header>
@@ -249,16 +248,12 @@
 </body>
 <!-- JS Imports -->
 
-<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
+<script src="vendor/material-components-web.min.js"></script>
+<script src="vendor/jquery-3.2.1.slim.min.js"></script>
+<script src="vendor/jquery.min.js"></script>
+<script src="vendor/popper.min.js"></script>
+<script src="vendor/bootstrap.min.js"></script>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="js/typeahead.bundle.js"></script>
 
 <script src="js/modules.js"></script>

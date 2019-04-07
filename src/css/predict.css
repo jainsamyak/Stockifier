@@ -20,8 +20,23 @@ button:focus{
     background-image: linear-gradient(to right,#6649b5,#41258e) !important;
 }
 .forecast{
-    border: 1px solid black;
     padding: 1rem;
-    display: none;
+    background-image: linear-gradient(to right,#41258e,#6649b5,#41258e) !important;
+    color: white;
+    /* display: none; */
+    text-align: center;
+    font-size: 1.2rem;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
     
+}
+.mdc-snackbar__surface{
+    background-color: rgba(237, 234, 240, 0.95) !important;
+}
+.mdc-snackbar{
+    color: #41258e !important;
+}
+.mdc-snackbar__label{
+    color: #41258e !important;
 }

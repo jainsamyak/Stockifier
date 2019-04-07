@@ -7,7 +7,7 @@
     <title>Stockifier - Forecast</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/predict.css">
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="vendor/material-components-web.min.css">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -34,12 +34,12 @@
 
                 <div>
                     <div class="mdc-text-field mdc-text-field--outlined mr-2">
-                        <input type="number" required id="txtTargetLoss" class="mdc-text-field__input" value="0.0007"
-                            step="0.0001" min="0.00001" max="1">
+                        <input type="number" required id="txtNumEpochs" class="mdc-text-field__input" value="15"
+                            step="1" min="1">
                         <div class="mdc-notched-outline">
                             <div class="mdc-notched-outline__leading"></div>
                             <div class="mdc-notched-outline__notch">
-                                <label for="tf-outlined" class="mdc-floating-label">Target Loss</label>
+                                <label for="tf-outlined" class="mdc-floating-label">Epochs</label>
                             </div>
                             <div class="mdc-notched-outline__trailing"></div>
                         </div>
@@ -60,19 +60,21 @@
                         class="mdc mdc-button mdc-button--raised mb-2 startTraining">Start
                         Training</button>
                 </div>
-                <div class="forecast">
 
-                    <div id="forecast-price">
-                        Forecast Price: $0
-                    </div>
-                </div>
             </div>
+
         </div>
 
 
         <canvas id="predictChart">
 
         </canvas>
+    </div>
+    <div class="forecast">
+
+        Forecast Price: <span id="currencySymbol">$</span>
+        <span id="forecast-price">0</span>
+
     </div>
 
     <!-- Snackbar -->
@@ -89,16 +91,11 @@
 
 
 </body>
-<script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="vendor/material-components-web.min.js"></script>
+<script src="vendor/jquery-3.2.1.slim.min.js"></script>
+<script src="vendor/jquery.min.js"></script>
+<script src="vendor/popper.min.js"></script>
+<script src="vendor/bootstrap.min.js"></script>
 
 <script src="js/prediction.js"></script>
 

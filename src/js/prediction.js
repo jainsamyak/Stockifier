@@ -29,7 +29,6 @@ function getStocks() {
     });
 }
 
-
 function updatePredictChart() {
 
     $stock = $('#stocksList').val();
@@ -38,6 +37,8 @@ function updatePredictChart() {
         predictChart.options.title.text = row.StockName;
         predictChart.options.scales.yAxes[0].scaleLabel.labelString = `Stock Price (${currencySymbol(row.Currency)})`;
         predictChart.update();
+        $('#currencySymbol').html(currencySymbol(row.Currency));
+
     });
     openSnackbar("Fetching Stock data");
 
@@ -64,8 +65,7 @@ function updatePredictChart() {
 
 
         const model = tf.sequential();
-        model.add(tf.layers.lstm({ units: 64, inputShape: [10, 1] }));
-        /* model.add(tf.layers.lstm({ units: 64, inputShape: [10, 1] })); */
+        model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] }));
         /* model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] })); */
         model.add(tf.layers.dense({ units: 1, activation: 'linear' }));
         $lr = parseFloat($('#txtLearningRate').val());
@@ -73,7 +73,7 @@ function updatePredictChart() {
         const opt = tf.train.adam(lr);
         const loss = 'meanSquaredError';
         openSnackbar("Compiling model");
-        model.compile({ optimizer: opt, loss: loss, metrics: ['mae'] }); /* Using Mean Absolute Error as metrics for accuracy of model */
+        model.compile({ optimizer: opt, loss: loss, metrics: ['mae', 'mse'] }); /* Using Mean Absolute Error as metrics for accuracy of model */
 
         async function fit() {
             t = targets.map((el) => minMaxInverseScaler(el, min, max));
@@ -82,10 +82,8 @@ function updatePredictChart() {
 
             var loss = Infinity;
             var epochs = 1;
-            var targetLoss = parseFloat($('#txtTargetLoss').val());
-            while (loss > targetLoss && window.startStop == 1) {
-
-
+            var targetEpochs = parseFloat($('#txtNumEpochs').val());
+            while (epochs < targetEpochs && window.startStop == 1) {
                 const resp = await model.fit(tfPrices, tfTargets, {
                     epochs: 1,
                     callbacks: {
@@ -112,6 +110,10 @@ function updatePredictChart() {
 
 
         }
+        function predictNextStep(tfData) {
+            const tfPred = model.predict(tfData);
+            return tfPred.dataSync()[0];
+        }
         fit().then(() => {
             window.startStop = 0;
             btn.removeClass('stopTraining');
@@ -124,31 +126,44 @@ function updatePredictChart() {
                 prices = prices.slice(0, prices.length);
                 var lastPrice = prices[prices.length - 1];
                 var dates = data[1];
-                tfTest = tf.tensor3d(prices.map((el) => minMaxScaler(el, min, max)), [1, prices.length, 1]);
-                tfPred = model.predict(tfTest);
+                var testdata = prices.map((el) => minMaxScaler(el, min, max));
+                const tfTest = tf.tensor3d(testdata, [1, prices.length, 1]);
+                const tfPred = model.predict(tfTest);
+                var predVal = tfPred.dataSync()[0];
+                var finalPredictions = [];
+                console.log("Predicting finally!");
+                for (let numPred = 0; numPred < 5; numPred++) {
+                    testdata.shift();
+                    testdata.push(predVal);
+                    predVal = predictNextStep(tf.tensor3d(testdata, [1, prices.length, 1]));
+                    finalPredictions.push(predVal);
+                }
 
+                finalPredictions = finalPredictions.map((el) => minMaxInverseScaler(el, min, max))
                 console.log("Final Prediction: ");
-                tfPred.data().then(d => {
-                    console.log("Done prediction");
-                    var forecastPrice = d.map((el) => minMaxInverseScaler(el, min, max))[0];
-                    $('.forecast').css('display', 'block');
-                    openSnackbar("Training Complete - Forecasted Price: " + forecastPrice);
-                    console.log(forecastPrice, lastPrice);
-                    if (forecastPrice > lastPrice) {
-                        alert("Forcasted Bullish trajectory - Target Price: " + forecastPrice);
-                        $('#forecast-price').html(`Forecasted Price: ${forecastPrice} (Bullish)`);
+                console.log("Final predictions", finalPredictions);
 
-                    } else {
-                        alert("Forcasted Bearish trajectory - Target Price: " + forecastPrice);
-                        $('#forecast-price').html(`Forecasted Price: ${forecastPrice} (Bearish)`);
+                let sum = finalPredictions.reduce((previous, current) => current += previous);
+                var forecastPrice = sum / finalPredictions.length;
 
-                    }
-                });
+                $('.forecast').css('display', 'block');
+                openSnackbar("Training Complete - Forecasted Price: " + forecastPrice);
+                console.log(forecastPrice, lastPrice);
+                if (forecastPrice > lastPrice) {
+                    alert("Forcasted Bullish trajectory - Target Price: " + forecastPrice);
+                    $('#forecast-price').html(`${Math.round(forecastPrice, 2)} (Bullish)`);
+                } else {
+                    alert("Forcasted Bearish trajectory - Target Price: " + forecastPrice);
+                    $('#forecast-price').html(`Forecasted Price: ${Math.round(forecastPrice, 2)} (Bearish)`);
+
+                }
 
             });
         });
     });
 }
+
+
 
 var ctx = $('#predictChart')
 var predictChart = new Chart(ctx, {
@@ -159,14 +174,16 @@ var predictChart = new Chart(ctx, {
             label: 'Actual',
             fill: false,
             data: [],
-            borderColor: 'red',
+            borderColor: '#DC143C',
+            backgroundColor: '#DC143C',
             pointRadius: 0
         }, {
             type: 'line',
             label: 'Predicted',
             fill: false,
             data: [],
-            borderColor: 'green',
+            borderColor: '#006400',
+            backgroundColor: '#006400',
             pointRadius: 0
         }]
     },

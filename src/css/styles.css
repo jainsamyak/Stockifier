@@ -26,6 +26,17 @@ sidebar {
     -moz-transition: margin .25s ease-out;
     -o-transition: margin .25s ease-out;
     transition: margin .25s ease-out;
+    background: linear-gradient(to bottom,#6A5ACD,#483D8B);
+}
+#sidebar-wrapper .list-group-item{
+    background: transparent !important;
+    color: white;
+    transition: all 300ms ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+#sidebar-wrapper .list-group-item:hover{
+    background: white !important;
+    color: #483D8B;
 }
 
 #sidebar-wrapper .sidebar-heading {

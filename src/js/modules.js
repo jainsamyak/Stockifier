@@ -28,7 +28,7 @@ var substringMatcher = function () {
                 //do nothing
             }
             finally {
-                console.log(string);
+
                 cb(stockMatches);
             }
         })
@@ -43,7 +43,7 @@ function deleteNotification(notifID) {
         if (err) {
             console.log(err);
         }
-        console.log("Deleted");
+
     });
     loadNotifications(false);
 }
@@ -72,12 +72,9 @@ function showNotificationWindow(ID) {
     })
     notifWin.loadURL(notifWinPath)
 
-
-    //alert("Hi");
-
     if (ID) {
         notifWin.webContents.on('did-finish-load', () => {
-            //alert("yay");
+
             notifWin.webContents.send('data-notify-id', ID);
         });
     }
@@ -94,7 +91,7 @@ function openNotifWin(element) {
 function showAnalyzeWindow() {
     let options = {
         width: 900,
-        height: 600,
+        height: 650,
         alwaysOnTop: true
     };
     let analyzeWinPath = path.join("file://", __dirname, "/analyze.html")
@@ -108,8 +105,8 @@ function showAnalyzeWindow() {
 function showPredictWindow() {
     let options = {
         width: 900,
-        height: 600,
-        //alwaysOnTop: true
+        height: 700,
+        alwaysOnTop: true
     };
     let predictWinPath = path.join("file://", __dirname, "/predict.html")
     let predictWin = new BrowserWindow(options)
@@ -210,21 +207,19 @@ function initalizeAlerts() {
     let conn = db.conn;
     let i = 0;
     let notifQry = "INSERT INTO Notifications (Type,Title,Content,StockID) VALUES (?,?,?,?)";
-    let direction = "falling";
-    conn.each("SELECT a.ID as AlertID,a.frequency FROM Alerts a,Stocks s WHERE a.StockID=s.ID", (err, arow) => {
+    var direction = "falling";
+    conn.each("SELECT a.ID as AlertID,a.frequency,a.direction FROM Alerts a,Stocks s WHERE a.StockID=s.ID", (err, arow) => {
 
         if (arow['direction'] == "up") {
             direction = "rising";
         }
-        console.log(arow);
         var notif = setInterval(() => {
 
             conn.get("SELECT a.ID as AlertID,a.*,s.* FROM Alerts a,Stocks s WHERE a.ID = " + arow['AlertID'] + " AND a.StockID=s.ID", (err, row) => {
 
-                console.log(notif);
-                alert(row['TargetPrice']);
+
                 checkTarget(row['Index'], row['TargetPrice'], row['Direction'], (beat) => {
-                    console.log(row['ID'] + "ok" + beat);
+
                     if (beat) {
                         conn.run(notifQry, ['normal', "Stockifier - " + row['Index'], row['StockName'] + " beat your target value of " + row['TargetPrice'] + " while " + direction, row['StockID']], (err) => {
                             //Inserting into notification
@@ -294,7 +289,7 @@ function loadSpotlight(element, stockID) {
             prevClose = Array(dates.length);
             prevClose.fill(Number(data));
             console.log(prevClose);
-            /*myChart.data.datasets[0].fill = true;
+            myChart.data.datasets[0].fill = true;
             if (latestPrice > prevClose[0]) {
                 myChart.data.datasets[0].borderColor = "rgba(34, 136, 14,1)";
                 myChart.data.datasets[0].backgroundColor = "rgba(128, 214, 111 ,0.4)";
@@ -306,7 +301,7 @@ function loadSpotlight(element, stockID) {
                 myChart.data.datasets[0].backgroundColor = "rgba(222, 16, 16,0.4)";
                 myChart.data.datasets[1].backgroundColor = "rgba(106, 21, 11,0.8)";
             }
- */
+
             myChart.data.datasets[2].data = prevClose;
             myChart.update();
         });
@@ -364,7 +359,7 @@ var myChart = new Chart(ctx, {
                 type: 'time',
                 scaleLabel: {
                     display: true,
-                    labelString: "Time"
+                    labelString: "Time (UTC)"
                 }
             }],
             yAxes: [{
@@ -398,7 +393,7 @@ function updateStocks() {
         setTimeout(() => {
             stockapi.getStockUpdates(row.Index, (data) => {
                 data = data['Global Quote'];
-                console.log(data);
+
                 conn.run("UPDATE Stocks SET High=" + data['03. high'] + ", Low=" + data['04. low'] + " WHERE ID=?", row.ID);
             });
 
@@ -451,9 +446,9 @@ $(document).ready(function () {
             val = val.split('(')[0];
             val = val.split(' ').splice(0, 1).join(" ");
             let conn = db.initDB();
-            console.log(val);
+
             stockapi.searchStock(val, (data) => {
-                console.log(String(data));
+
                 try {
                     data = JSON.parse(data).bestMatches;
 
@@ -461,14 +456,14 @@ $(document).ready(function () {
                     openSnackbar("An error occured");
                     return;
                 }
-                console.log(data);
+
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
 
                     if (element['1. symbol'] == stIndex) {
 
                         insertStockQry = "INSERT INTO Stocks ('Stockname','Index','High','Low','Currency') VALUES ('" + element['2. name'] + "','" + stIndex + "',0,0,'" + element['8. currency'] + "')"
-                        console.log(insertStockQry);
+
                         conn.run(insertStockQry, (err) => {
                             if (err) console.log(err);
 
@@ -485,9 +480,9 @@ $(document).ready(function () {
         else {
             try {
                 val = val.split(' ').splice(0, 1).join(" ");
-                console.log(val);
+
                 stockapi.searchStock(val, (data) => {
-                    console.log(String(data));
+
 
                     try {
                         data = JSON.parse(data).bestMatches;
@@ -499,7 +494,6 @@ $(document).ready(function () {
                     data = data[0];
 
                     insertStockQry = "INSERT INTO Stocks ('Stockname','Index','High','Low','Currency') VALUES ('" + data['2. name'] + "','" + data['1. symbol'] + "',0,0,'" + data['8. currency'] + "')"
-                    console.log(insertStockQry);
                     conn.run(insertStockQry, (err) => {
                         if (err) console.log(err);
 
@@ -512,7 +506,7 @@ $(document).ready(function () {
                 alert("An error occured!" + error);
             }
         }
-        //console.log(val);
+
 
     });
 
@@ -635,11 +629,11 @@ $(document).ready(function () {
     updateStocks();
     initializeStockView();
     loadNotifications(true);
-    //initalizeAlerts();
+    initalizeAlerts();
 
     $("#txtStockSearch").on("keyup", function () {
         var value = $(this).val().toLowerCase();
-        console.log(value)
+
         $("#myStocks li").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
