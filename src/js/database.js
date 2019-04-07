@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('stocksDB');
-
+const path = require('path')
+const dbPath = path.resolve(__dirname, 'stocksDB')
+const db = new sqlite3.Database(dbPath);
 
 function initDB() {
 

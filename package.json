@@ -6,7 +6,11 @@
   "scripts": {
     "start": "electron .",
     "postinstall": "install-app-deps",
-    "rebuild": "electron-rebuild -f -w sqlite3"
+    "rebuild": "electron-rebuild -f -w sqlite3",
+    "build-osx": "electron-packager ./ --app-version 1.0.0 --platform darwin --icon ./res/Stockifier.png.icns --out ./dist --overwrite",
+    "build-linux": "electron-packager ./ --app-version 1.0.0 --platform linux --icon ./res/Stockifier.png --out ./dist --overwrite",
+    "build-win32": "electron-packager ./ --app-version 1.0.0 --platform win32 --out ./dist --overwrite",
+    "build-all": "electron-packager ./ --app-version 1.0.0 --platform all --icon ./res/Stockifier --out ./dist --overwrite"
   },
   "repository": {
     "type": "git",
@@ -32,6 +36,7 @@
   "devDependencies": {
     "electron": "^4.0.6",
     "electron-builder": "^20.38.5",
+    "electron-packager": "^13.1.1",
     "electron-rebuild": "^1.8.4",
     "electron-reload": "^1.4.0"
   },
