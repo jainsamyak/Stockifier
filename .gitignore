@@ -2,4 +2,4 @@ stocksDB
 COLOR_THEME
 node_modules
 .DS_STORE
-dist
+.DS_Store
