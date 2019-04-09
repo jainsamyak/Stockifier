@@ -35,7 +35,7 @@
   "homepage": "https://github.com/jainsamyak/Stockifier#readme",
   "devDependencies": {
     "electron": "^4.0.6",
-    "electron-builder": "^20.38.5",
+    "electron-builder": "^20.39.0",
     "electron-packager": "^13.1.1",
     "electron-rebuild": "^1.8.4",
     "electron-reload": "^1.4.0"
