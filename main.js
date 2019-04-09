@@ -10,6 +10,7 @@ function createWindow() {
         icon: path.join(__dirname, 'res', 'Stockifier.png')
     })
     win.setMinimizable(false);
+    win.webContents.openDevTools()
     let srcDir = "src/"
     win.loadFile(srcDir + 'index.html')
 
