@@ -1,6 +1,5 @@
-node_modules/
+*node_modules/*
 stocksDB
 COLOR_THEME
 .DS_STORE
 dist/
-

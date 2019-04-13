@@ -8,9 +8,29 @@
     "postinstall": "install-app-deps",
     "rebuild": "electron-rebuild -f -w sqlite3",
     "build-osx": "electron-packager ./ --app-version 1.0.0 --platform darwin --icon ./res/Stockifier.png.icns --prune=true --out ./dist --overwrite",
-    "build-linux": "electron-packager ./ --app-version 1.0.0 --platform linux --icon ./res/Stockifier.png --prune=true --asar=true --out ./dist --overwrite",
-    "build-win32": "electron-packager ./ --app-version 1.0.0 --platform win32 --prune=true --asar=true --out ./dist --overwrite",
-    "build-all": "npm run build-osx && npm run build-win32 && npm run build-linux"
+    "build-linux": "electron-packager ./ --app-version 1.0.0 --platform linux --icon ./res/Stockifier.png --prune=true --out ./dist --overwrite",
+    "build-win32": "electron-packager ./ --app-version 1.0.0 --platform win32 --prune=true --out ./dist --overwrite",
+    "build-all": "npm run build-osx && npm run build-win32 && npm run build-linux",
+    "dist": "build"
+  },
+  "build": {
+    "appId": "com.samyak.stockifier",
+    "asar": "false",
+    "extraResources": [
+      "stocksDB.db"
+    ],
+    "productName": "Stockifier",
+    "win": {
+      "target": "nsis",
+      "icon": "res/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "license": "LICENSE"
+    }
   },
   "repository": {
     "type": "git",
@@ -47,6 +67,7 @@
     "chart.js": "^2.7.3",
     "currency-symbol-map": "^4.0.4",
     "jquery": "^3.3.1",
+    "popper.js": "^1.15.0",
     "sqlite3": "^4.0.6"
   }
 }

@@ -1,6 +1,8 @@
+const remote = require('electron').remote;
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path')
-const dbPath = path.resolve(__dirname, 'stocksDB')
+const dbPath = path.join(remote.app.getAppPath(), 'stocksDB.db')
+console.log(dbPath)
 const db = new sqlite3.Database(dbPath);
 
 function initDB() {

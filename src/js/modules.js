@@ -92,8 +92,7 @@ function openNotifWin(element) {
 function showAnalyzeWindow() {
     let options = {
         width: 900,
-        height: 650,
-        alwaysOnTop: true
+        height: 650
     };
     let analyzeWinPath = path.join("file://", __dirname, "/analyze.html")
     let analyzeWin = new BrowserWindow(options)
@@ -106,8 +105,7 @@ function showAnalyzeWindow() {
 function showPredictWindow() {
     let options = {
         width: 900,
-        height: 700,
-        alwaysOnTop: true
+        height: 700
     };
     let predictWinPath = path.join("file://", __dirname, "/predict.html")
     let predictWin = new BrowserWindow(options)

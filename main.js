@@ -10,6 +10,7 @@ function createWindow() {
         icon: path.join(__dirname, 'res', 'Stockifier.png')
     })
     win.setMinimizable(false);
+    //win.webContents.toggleDevTools();
     let srcDir = "src/"
     win.loadFile(srcDir + 'index.html')
 
@@ -73,7 +74,7 @@ function createWindow() {
         if (choice === 1) {
             event.preventDefault()
             //win.hide()
-            app.hide()
+            win.hide()
         } else {
             win.on('closed', () => {
                 win = null;
@@ -84,8 +85,10 @@ function createWindow() {
     })
 }
 
-app.on('ready', createWindow)
-
+app.on('ready', ()=>{
+    createWindow()
+    app.setAppUserModelId('com.samyak.Stockifier')
+})
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()
@@ -97,3 +100,4 @@ app.on('activate', () => {
         createWindow()
     }
 })
+

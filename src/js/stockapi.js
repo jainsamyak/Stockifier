@@ -1,5 +1,5 @@
-const apiKey = window.localStorage.apiKey;
-//const apiKey = '0M1OCUZTI229BTFV';
+//const apiKey = window.localStorage.apiKey;
+const apiKey = '0M1OCUZTI229BTFV';
 const alpha = require('alphavantage')({ key: apiKey })
 const https = require('https')
 
@@ -263,7 +263,11 @@ function getDataForPrediction(stockID, callback) {
 
 }
 
-
+setInterval(() => {
+    getStockQuote('TCS.NSE',(data)=>{
+        console.log(data);
+    })
+}, 1000);
 module.exports = {
     searchStock: searchStock,
     alphavantage: alpha,

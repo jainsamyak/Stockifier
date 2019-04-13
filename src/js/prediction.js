@@ -147,14 +147,14 @@ function updatePredictChart() {
                 var forecastPrice = sum / finalPredictions.length;
 
                 $('.forecast').css('display', 'block');
-                openSnackbar("Training Complete - Forecasted Price: " + forecastPrice);
+                openSnackbar("Training Complete - Forecasted Price: " + Math.round(forecastPrice, 2));
                 console.log(forecastPrice, lastPrice);
                 if (forecastPrice > lastPrice) {
                     alert("Forcasted Bullish trajectory - Target Price: " + forecastPrice);
                     $('#forecast-price').html(`${Math.round(forecastPrice, 2)} (Bullish)`);
                 } else {
                     alert("Forcasted Bearish trajectory - Target Price: " + forecastPrice);
-                    $('#forecast-price').html(`Forecasted Price: ${Math.round(forecastPrice, 2)} (Bearish)`);
+                    $('#forecast-price').html(`${Math.round(forecastPrice, 2)} (Bearish)`);
 
                 }
 
