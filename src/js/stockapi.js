@@ -7,10 +7,6 @@ function searchStock(stockName, callback) {
     let apiUrl = 'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=' + stockName + '&apikey=' + apiKey
     https.get(apiUrl, (res) => {
         res.on('data', (data) => {
-            //console.log(String(data))
-
-            //console.log(results);
-
             callback(data)
         })
     })
@@ -19,11 +15,15 @@ function searchStock(stockName, callback) {
 function getStockQuote(stockID, callback) {
     alpha.data.quote(stockID).then(data => {
         callback(data['Global Quote']['05. price'])
+    }).catch(err=>{
+        openSnackbar('API timed out! Please try again in a few seconds....')
     });
 }
 function getPreviousStockClose(stockID, callback) {
     alpha.data.quote(stockID).then(data => {
         callback(data['Global Quote']['08. previous close'])
+    }).catch(err=>{
+        openSnackbar('API timed out! Please try again in a few seconds....')
     });
 }
 function getStockUpdates(stockID, callback) {
@@ -56,6 +56,8 @@ function getStockData(stockID, callback) {
         console.log(dates.length);
         callback([dates.reverse(), prices.reverse(), volumes.reverse()])
 
+    }).catch(err=>{
+        openSnackbar('API timed out! Please try again in a few seconds....')
     });
 }
 
@@ -79,6 +81,8 @@ function getStockPrices(stockID, interval, callback) {
                 i += 1;
             }
             callback([prices, volumes, dates]);
+        }).catch(err=>{
+            openSnackbar('API timed out! Please try again in a few seconds....')
         });
     } else if (interval == "week") {
         alpha.data.intraday(stockID, 'compact', 'json', '60min').then(data => {
@@ -97,6 +101,8 @@ function getStockPrices(stockID, interval, callback) {
                 i += 1;
             }
             callback([prices.reverse(), volumes.reverse(), dates.reverse()]);
+        }).catch(err=>{
+            openSnackbar('API timed out! Please try again in a few seconds....')
         });
 
     } else if (interval == "month") {
@@ -118,6 +124,8 @@ function getStockPrices(stockID, interval, callback) {
                 i += 1;
             }
             callback([prices.reverse(), volumes.reverse(), dates.reverse()]);
+        }).catch(err=>{
+            openSnackbar('API timed out! Please try again in a few seconds....')
         });
 
     } else if (interval == "6months") {
@@ -140,6 +148,8 @@ function getStockPrices(stockID, interval, callback) {
             }
 
             callback([prices.reverse(), volumes.reverse(), dates.reverse()]);
+        }).catch(err=>{
+            openSnackbar('API timed out! Please try again in a few seconds....')
         });
 
     } else if (interval == "max") {
@@ -163,7 +173,9 @@ function getStockPrices(stockID, interval, callback) {
             }
             callback([prices, volumes, dates]);
 
-        });
+        }).catch(err=>{
+            openSnackbar('API timed out! Please try again in a few seconds....')
+        });;
 
     }
 
@@ -184,7 +196,9 @@ function getStockIndicator(stockID, indicator, callback) {
             }
             callback([prices, dates]);
             return;
-        })
+        }).catch(err=>{
+            openSnackbar('API timed out! Please try again in a few seconds....')
+        });
     } else if (indicator == "RSI") {
         alpha.technical.rsi(stockID, 'weekly', 60, 'close').then(data => {
             data = data['Technical Analysis: RSI'];
@@ -237,6 +251,8 @@ function getStockHistoricalDaily(stockID, callback) {
         }
         console.log(keys.length);
         callback([prices.reverse(), dates.reverse()]);
+    }).catch(err=>{
+        openSnackbar('API timed out! Please try again in a few seconds....')
     });
 
 
@@ -259,15 +275,12 @@ function getDataForPrediction(stockID, callback) {
         }
 
         callback([prices.reverse(), dates.reverse()]);
+    }).catch(err=>{
+        openSnackbar('API timed out! Please try again in a few seconds....')
     });
 
 }
 
-setInterval(() => {
-    getStockQuote('TCS.NSE',(data)=>{
-        console.log(data);
-    })
-}, 1000);
 module.exports = {
     searchStock: searchStock,
     alphavantage: alpha,
