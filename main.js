@@ -58,7 +58,7 @@ function createWindow() {
             }
         }
     ])
-    tray.setToolTip('This is my application.')
+    tray.setToolTip('Stockifier')
     tray.setContextMenu(contextMenu)
 
     win.on('close', (event) => {
