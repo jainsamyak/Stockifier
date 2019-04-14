@@ -178,7 +178,7 @@ var predictChart = new Chart(ctx, {
             data: [],
             borderColor: '#DC143C',
             backgroundColor: '#DC143C',
-            pointRadius: 0
+            pointRadius: 1
         }, {
             type: 'line',
             label: 'Predicted',
@@ -186,7 +186,7 @@ var predictChart = new Chart(ctx, {
             data: [],
             borderColor: '#006400',
             backgroundColor: '#006400',
-            pointRadius: 0
+            pointRadius: 1
         }]
     },
     options: {
