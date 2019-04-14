@@ -1,14 +1,12 @@
-# Stockifier
+# Stockifier ![Stockifier.png](./res/Stockifierlogo.png)
 ### A notification and insights app for stock markets
-![t](./res/Stockifier.png)
-
 
 # Downloads
-```
-## Windows Release - [Windows x64](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
 
-## Mac OSX Release - [Mac OSX](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
-```
+### Windows Release - [Windows x64](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
+
+### Mac OSX Release - [Mac OSX](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
+
 
 # Features
 * Real time stock alerts and updates through desktop notifications
