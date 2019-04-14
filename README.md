@@ -4,9 +4,9 @@
 
 # Downloads
 
-#### Windows Release - [Windows x64](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
+## Windows Release - [Windows x64](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
 
-#### Mac OSX Release - [Mac OSX](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
+## Mac OSX Release - [Mac OSX](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0)
 
 
 # Features
