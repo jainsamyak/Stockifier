@@ -26,7 +26,8 @@
 ![Notifications.png](./res/img/notif3.png)
 ![Notifications.png](./res/img/notify.png)
 ![Notifications.png](./res/img/home3.png)
-[![View it in Action](./res/img/Stockifier.mov)](./res/img/Stockifier.mov)
+
+## [![View it in Action](./res/img/Stockifier.mov)](./res/img/Stockifier.mov)
 
 
 # Built With
