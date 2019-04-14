@@ -3,8 +3,10 @@
 
 
 # Downloads
-[Windows x64](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0-beta)
-[Mac OSX]()
+
+#### Windows Pre Release - [Windows x64](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0-beta)
+
+#### Mac OSX Pre Release - [Mac OSX](https://github.com/jainsamyak/Stockifier/releases/tag/v1.0.0-beta)
 
 
 # Features

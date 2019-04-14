@@ -84,7 +84,7 @@ function createWindow() {
     })
 }
 
-app.on('ready', ()=>{
+app.on('ready', () => {
     createWindow()
     app.setAppUserModelId('com.samyak.Stockifier')
 })

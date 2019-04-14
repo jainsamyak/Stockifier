@@ -31,6 +31,11 @@
       "createStartMenuShortcut": true,
       "installerIcon": "res/icon.ico",
       "license": "LICENSE"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "res/macicon.png",
+      "type": "distribution"
     }
   },
   "repository": {
