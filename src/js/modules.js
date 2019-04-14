@@ -462,7 +462,7 @@ $(document).ready(function () {
 
                         conn.run(insertStockQry, (err) => {
                             if (err) console.log(err);
-
+                            $('#typeahead').val('');
                             openSnackbar("Stock Added!");
                             initializeStockView();
 
@@ -492,7 +492,7 @@ $(document).ready(function () {
                     insertStockQry = "INSERT INTO Stocks ('Stockname','Index','High','Low','Currency') VALUES ('" + data['2. name'] + "','" + data['1. symbol'] + "',0,0,'" + data['8. currency'] + "')"
                     conn.run(insertStockQry, (err) => {
                         if (err) console.log(err);
-
+                        $('#typeahead').val('');
                         openSnackbar("Stock Added!");
                         initializeStockView();
 
@@ -503,7 +503,7 @@ $(document).ready(function () {
             }
         }
 
-
+        
     });
 
     /* Typeahead instance */
