@@ -29,7 +29,7 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "installerIcon":"res/icon.ico",
+      "installerIcon": "res/icon.ico",
       "license": "LICENSE"
     }
   },

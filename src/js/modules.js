@@ -84,6 +84,7 @@ function showNotificationWindow(ID) {
 }
 
 function openNotifWin(element) {
+    event.stopPropagation();
     let ID = $(element).attr('data-notify-id');
     showNotificationWindow(ID); //Passing ID to notification window
 
@@ -117,6 +118,10 @@ function showPredictWindow() {
 
 function setApiKey() {
     $key = $('#txtApiKey').val();
+    if($key==""){
+        reloadWin();
+        return;
+    }
     window.localStorage.apiKey = $key;
     reloadWin();
 }
@@ -281,7 +286,7 @@ function loadSpotlight(element, stockID) {
         myChart.data.labels = dates;
         myChart.data.datasets[0].data = time_series_points;
         myChart.data.datasets[1].data = volumes;
-        myChart.options.scales.xAxes[0].scaleLabel.labelString = `Time (${dates[0].split(' ')[0]})`;
+        myChart.options.scales.xAxes[0].scaleLabel.labelString = `Time (UTC) (${dates[0].split(' ')[0]})`;
 
         var latestPrice = time_series_points[time_series_points.length - 1];
         stockapi.getPreviousStockClose(stockID, (data) => {
@@ -384,7 +389,7 @@ var myChart = new Chart(ctx, {
     }
 });
 
-
+/* Timely updation of stock database prices - High and Low */
 function updateStocks() {
     let conn = db.conn;
     let t = 20000;
@@ -400,7 +405,7 @@ function updateStocks() {
         t += 20000;
     });
 }
-/* Timely updation of stock database */
+
 
 
 const sb = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
@@ -408,17 +413,13 @@ function openSnackbar(snackbarMsg) {
     $snackbar = $("#snackbar-msg");
     $snackbar.text(snackbarMsg);
     sb.open();
-    setTimeout(() => {
-        sb.close()
-    }, 5000);
-
 }
 
+/* Resize spotlight chart after window resize */
 $("#menu-toggle").click(function (e) {
     e.preventDefault();
     setTimeout(() => {
         myChart.resize();
-
     }, 1000);
     $("#wrapper").toggleClass("toggled");
 });
@@ -426,10 +427,6 @@ $("#menu-toggle").click(function (e) {
 
 
 $(document).ready(function () {
-
-
-
-
 
     $('.dropdown-menu').click(function (e) {
         e.stopPropagation();
@@ -510,12 +507,13 @@ $(document).ready(function () {
     });
 
     /* Typeahead instance */
-    $('#the-basics .typeahead').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 3
+    $('#the-basics .typeahead').typeahead(
+        {
+            hint: true,
+            highlight: true,
+            minLength: 3
 
-    },
+        },
         {
             name: 'stocks',
             source: substringMatcher()
@@ -571,7 +569,8 @@ $(document).ready(function () {
         })
     }
     /* Function to handle stockDelete */
-    $(document).on('click', ".btnDeleteStock", function () {
+    $(document).on('click', ".btnDeleteStock", function (event) {
+        event.stopImmediatePropagation();
         openDeleteDialog("Delete Stock", "Are you sure you want to delete the stock?", $(this).attr('data-delete-id'));
     });
 
@@ -596,7 +595,7 @@ $(document).ready(function () {
                                         <span id="stockTitle">`+ row.StockName + `</span>
                                     </div>
                                     <div class="p-2 d-flex justify-content-around">
-                                        <button class="mdc-fab mdc-fab--mini mdc-fab--extended notify" data-notify-id=`+ row.ID + ` onclick='openNotifWin(this)'>
+                                        <button class="mdc-fab mdc-fab--mini mdc-fab--extended notify" data-notify-id=`+ row.ID + ` onclick='openNotifWin(this);'>
                                             <span class="mdc-fab__icon material-icons">notifications_active</span>
                                             <span class="mdc-fab__label">Notify</span>
                                         </button>

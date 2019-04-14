@@ -66,7 +66,6 @@ function updatePredictChart() {
 
         const model = tf.sequential();
         model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] }));
-        /* model.add(tf.layers.lstm({ units: 32, inputShape: [10, 1] })); */
         model.add(tf.layers.dense({ units: 1, activation: 'linear' }));
         $lr = parseFloat($('#txtLearningRate').val());
         const lr = $lr;
@@ -90,17 +89,20 @@ function updatePredictChart() {
                         onEpochEnd: (epoch, log) => {
                             epochs += 1;
                             loss = log.loss;
-                            pred = model.predict(tfPrices);
-                            pred.data().then(d => {
-                                ds = d.map((el) => minMaxInverseScaler(el, min, max));
-                                ds = ds.slice(d.length - 100, d.length);
-                                //console.log(ds);
-                                predictChart.data.datasets[0].data = t;
-                                predictChart.data.datasets[1].data = ds;
-                                //predictChart.data.labels = Array(50);
-                                predictChart.update();
-
-                                openSnackbar(`Training model - Epoch ${epochs}: loss = ${log.loss} `);
+                            tf.tidy(()=>{
+                                
+                                pred = model.predict(tfPrices);
+                                pred.data().then(d => {
+                                    ds = d.map((el) => minMaxInverseScaler(el, min, max));
+                                    ds = ds.slice(d.length - 100, d.length);
+                                    
+                                    predictChart.data.datasets[0].data = t;
+                                    predictChart.data.datasets[1].data = ds;
+                                    
+                                    predictChart.update();
+    
+                                    openSnackbar(`Training model - Epoch ${epochs}: loss = ${log.loss} `);
+                                });
                             });
                         }
                     },
@@ -220,17 +222,10 @@ var predictChart = new Chart(ctx, {
     }
 });
 
-
-
-
-
-
-
 const sb = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
 function openSnackbar(snackbarMsg) {
     $snackbar = $("#snackbar-msg");
     $snackbar.text(snackbarMsg);
-    //sb.close();
     sb.open();
 }
 
