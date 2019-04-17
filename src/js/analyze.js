@@ -212,7 +212,16 @@ $(document).ready(function () {
 
 
 });
+const sb = mdc.snackbar.MDCSnackbar.attachTo(document.querySelector('.mdc-snackbar'));
+function openSnackbar(snackbarMsg) {
+    $snackbar = $("#snackbar-msg");
+    $snackbar.text(snackbarMsg);
+    sb.open();
+    setTimeout(() => {
+        sb.close()
+    }, 5000);
 
+}
 const textfields = document.querySelectorAll('.mdc-text-field');
 for (const tf of textfields) {
     mdc.textField.MDCTextField.attachTo(tf);

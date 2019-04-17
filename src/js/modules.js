@@ -118,7 +118,7 @@ function showPredictWindow() {
 
 function setApiKey() {
     $key = $('#txtApiKey').val();
-    if($key==""){
+    if ($key == "") {
         reloadWin();
         return;
     }
@@ -503,7 +503,7 @@ $(document).ready(function () {
             }
         }
 
-        
+
     });
 
     /* Typeahead instance */
@@ -562,6 +562,7 @@ $(document).ready(function () {
                     if (err) {
                         return openSnackbar("Unable to delete!");
                     }
+                    conn.run("DELETE FROM Alerts WHERE StockID=?", deleteID);
                     openSnackbar("Deleted successfully!");
                     initializeStockView();
                 });
