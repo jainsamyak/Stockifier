@@ -31,7 +31,13 @@ function createWindow() {
                 },
                 { role: 'reload' },
                 { role: 'forcereload' },
-                { role: 'toggledevtools' },
+                {
+                    label: 'ToggleDevTools',
+                    click() {
+                        win.webContents.toggleDevTools()
+
+                    }
+                },
                 { type: 'separator' },
                 { role: 'resetzoom' },
                 { role: 'zoomin' },
