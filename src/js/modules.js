@@ -198,7 +198,7 @@ function checkTarget(symbol, targetVal, direction, callback) {
             }
         }
         else {
-            if (targetVal <= currVal) {
+            if (currVal <= targetVal) {
                 callback(true);
                 return;
             }
