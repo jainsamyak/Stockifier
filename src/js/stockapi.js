@@ -1,5 +1,4 @@
-//const apiKey = window.localStorage.apiKey;
-const apiKey = '0M1OCUZTI229BTFV';
+const apiKey = window.localStorage.apiKey;
 const alpha = require('alphavantage')({ key: apiKey })
 const https = require('https')
 
