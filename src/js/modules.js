@@ -192,7 +192,7 @@ function loadNotifications(enabled) {
 function checkTarget(symbol, targetVal, direction, callback) {
     stockapi.getStockQuote(symbol, (currVal) => {
         if (direction == "up") {
-            if (targetVal >= currVal) {
+            if (currVal >= targetVal) {
                 callback(true);
                 return;
             }
