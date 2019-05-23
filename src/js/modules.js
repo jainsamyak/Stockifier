@@ -222,7 +222,7 @@ function initalizeAlerts() {
             conn.get("SELECT a.ID as AlertID,a.*,s.* FROM Alerts a,Stocks s WHERE a.ID = " + arow['AlertID'] + " AND a.StockID=s.ID", (err, row) => {
 
 
-                checkTarget(row['Index'], row['TargetPrice'], row['Direction'], (beat) => {
+                checkTarget(row['Index'], row['TargetPrice'], row['direction'], (beat) => {
 
                     if (beat) {
                         conn.run(notifQry, ['normal', "Stockifier - " + row['Index'], row['StockName'] + " beat your target value of " + row['TargetPrice'] + " while " + direction, row['StockID']], (err) => {
