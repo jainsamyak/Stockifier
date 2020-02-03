@@ -1,6 +1,6 @@
 {
   "name": "Stockifier",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "A notification and insights app for stock markets",
   "main": "main.js",
   "scripts": {
